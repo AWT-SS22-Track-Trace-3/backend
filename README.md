@@ -2,8 +2,8 @@
 
 ### Build the node docker image
 
-    docker build . -t <image-name>
+    docker build . -t awt-node-app
 
 ### Run the docker image
 
-    docker run -p <port>:8080 -d <image-name>
+    docker run -p <port>:8080 -d awt-node-app
