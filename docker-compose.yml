@@ -1,0 +1,25 @@
+version: "3"
+
+volumes:
+  mongodata:
+    driver: local
+
+services:
+  node-app:
+    container_name: track-trace-server
+    image: awt/track-trace-server
+    build: ./node-app
+    ports:
+      - "8888:8080"
+    depends_on:
+      - mongodb
+  mongodb:
+    container_name: track-trace-mongo
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017-27019:27017-27019"
