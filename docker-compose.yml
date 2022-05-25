@@ -7,7 +7,7 @@ volumes:
 services:
   node-app:
     container_name: track-trace-server
-    image: ghcr.io/awt-ss22-track-trace-3/awt/track-trace-server:latest
+    image: awt/track-trace-server
     build: ./node-app
     ports:
       - "8888:8080"
