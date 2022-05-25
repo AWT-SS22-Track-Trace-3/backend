@@ -4,12 +4,10 @@ EXPOSE 8080
 
 WORKDIR /app
 
-COPY package.json ./
-COPY yarn.lock ./
+COPY package*.json ./
 
 RUN yarn
 
-COPY ./code .
 COPY . .
 
 CMD ["node", "server.js"]
