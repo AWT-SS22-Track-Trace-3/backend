@@ -2,10 +2,8 @@
 
 ### Build the node docker image
 
-    cd node-app
-    docker build . -t awt/track-trace-server
+    docker build . -t awt-node-app
 
-### Run docker compose
+### Run the docker image
 
-    cd ..
-    docker compose up
+    docker run -p <port>:8080 -d awt-node-app
