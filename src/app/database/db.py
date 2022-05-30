@@ -19,6 +19,7 @@ def postProduct(auth, product):
     if auth:
         products.insert_one(product)
 
+# at timestamp and vendor identification to transaction history
 def checkinProduct(id):
     products.update_one( { "id": id, "checkout": "not checkout" } )
     if id:
