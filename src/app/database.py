@@ -1,7 +1,7 @@
 import pymongo
 import time
 
-from .common.constants import *
+from .constants import *
 
 # pymongo connecting to mongoDB
 client = pymongo.MongoClient(
