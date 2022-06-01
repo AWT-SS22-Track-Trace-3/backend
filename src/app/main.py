@@ -1,7 +1,8 @@
-from fastapi import FastAPI
-import requests as req
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Any
 
-from database import db
+from database import DB
 
 app = FastAPI()
 
@@ -18,19 +19,65 @@ async def test(id):
     print(id)
 
     return { "message": "Success!" }
-    
+
+class Product(BaseModel):
+    name: str
+    commonName: Any
+    form: str
+    strength: str
+    drugCode: Any
+    packSize: int
+    packType: Any
+    serialNumber: str
+    reimbursmentNumber: Any
+    containers: Any
+    batchNumber: str
+    expiryDate: str
+    coding: Any
+    marketedStates: Any
+    manufacturerName: Any
+    manufacturerAdress: Any
+    marketingHolderName: Any
+    marketingHolderAdress: Any
+    wholesaler: Any
+
+class CreateBody(BaseModel):
+    auth: str
+    product: dict   #Product
+
 @app.post("/create")
-async def create(product):
-    db.postProduct(product)
+async def create(body: CreateBody):
+    auth = body["auth"]
+    product = body["product"]
 
-@app.get("/checkin/{id}")
-async def checkin(id):
-    db.checkinProduct(id)
-    
-@app.get("/checkout/{id}")
-async def checkout(id):
-    db.checkoutProduct(id)
+    DB.createProduct(product)
 
-@app.get("/terminate/{id}")
-async def terminate(id):
-    db.terminateProduct(id)
+class CheckoutBody(BaseModel):
+    auth: str
+    transactionDate: str
+    shipmentDate: str
+    Owner: str
+    OwnerAddress: str
+    futureOwner: str
+    futureOwnerAddress: str
+
+@app.post("/checkout")
+async def checkout(body: CheckoutBody):
+    DB.checkoutProduct(id)
+
+class CheckinBody(BaseModel):
+    auth: str
+    transactionDate: str
+    shipmentDate: str
+    prevOwner: str
+    prevOwnerAddress: str
+    Owner: str
+    OwnerAddress: str
+
+@app.post("/checkin")
+async def checkin(body: CheckinBody):
+    DB.checkinProduct(id)
+
+@app.get("/terminate/{auth}")
+async def terminate(auth):
+    DB.terminateProduct(auth)
