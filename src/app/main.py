@@ -41,19 +41,11 @@ class Product(BaseModel):
     marketingHolderAdress: Any
     wholesaler: Any
 
-class CreateBody(BaseModel):
-    auth: str
-    product: dict   #Product
-
 @app.post("/create")
-async def create(body: CreateBody):
-    auth = body["auth"]
-    product = body["product"]
-
+async def create(product: Product):
     DB.createProduct(product)
 
 class CheckoutBody(BaseModel):
-    auth: str
     transactionDate: str
     shipmentDate: str
     Owner: str
@@ -63,10 +55,9 @@ class CheckoutBody(BaseModel):
 
 @app.post("/checkout")
 async def checkout(body: CheckoutBody):
-    DB.checkoutProduct(id)
+    DB.checkoutProduct(body)
 
 class CheckinBody(BaseModel):
-    auth: str
     transactionDate: str
     shipmentDate: str
     prevOwner: str
@@ -76,8 +67,8 @@ class CheckinBody(BaseModel):
 
 @app.post("/checkin")
 async def checkin(body: CheckinBody):
-    DB.checkinProduct(id)
+    DB.checkinProduct(body)
 
-@app.get("/terminate/{auth}")
-async def terminate(auth):
-    DB.terminateProduct(auth)
+@app.get("/terminate")
+async def terminate():
+    DB.terminateProduct()

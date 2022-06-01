@@ -10,33 +10,74 @@ client = pymongo.MongoClient(
     username=MONGO['USERNAME'],
     password=MONGO['PASSWORD']
 )
-products = client["Products"]["products"]
+products = client["Tracking"]["products"]
 
 class DB:
 
-    def getProduct(id):
-        product = products.find_one( { "id": id } )
+    def getProduct(serialNumber):
+        product = products.find_one( { "product.serialNumber": serialNumber } )
 
-    def createProduct(auth, product):
-        # authenticate vendor
-        if auth:
+    def createProduct(product):
+        document = { "product.serialNumber": product["serialNumber"] }
+
+        if products.find_one( document ).count() == 0:
             entry = {
                 "used": False,
                 "history": [],
                 "product": product
             }
-            products.insert_one(product)
+            return products.insert_one(product)
 
-    # at timestamp and vendor identification to transaction history
-    def checkinProduct(id, owner_auth, owner, prev_owner):
-        update_history = { "timestamp": time.time(), "checkout": True, "owner": prev_owner, "future_owner": owner, "checkin": True }
-        products.update_one( { "id": id, "checkout": "not checkout" } )
-        if id:
-            return { "message": ""}
+        return { "message": "ERROR" }
 
-    def checkoutProduct(id, owner_auth, owner, f_owner):
-        update_history = { "timestamp": time.time(), "checkout": True, "owner": owner, "future_owner": f_owner, "checkin": False }
-        products.update_one( { "id": id, "checkout": "not checkout" } )
+    def checkoutProduct(serialNumber, owner, f_owner):
+        document = { "product.serialNumber": serialNumber }
+        projection = { "used": 1, "history.$.checkin": 1 }
 
-    def terminateProduct(id):
-        products.update_one( { "id": id, "used": True } )
+        result = products.find_one( document, projection )
+
+        if not result["used"] and result["checkin"]:
+            update_history = {
+                                "$push": {
+                                    "history": {
+                                        "$each": [
+                                            {
+                                                "timestamp_checkout": time.time(),
+                                                "owner": owner,
+                                                "future_owner": f_owner,
+                                                "timestamp_checkin": None,
+                                                "checkin": False
+                                            }
+                                        ],
+                                        "$position": 0
+                                    }
+                                }
+                            }
+
+            return products.update_one( document, update_history )
+
+        return { "message": "ERROR" }
+
+    def checkinProduct(serialNumber, owner, prev_owner):
+        document = { "product.serialNumber": serialNumber }
+        projection = { "used": 1, "history.$.checkin": 1 }
+
+        result = products.find_one( document, projection )
+
+        if not (result["used"] and result["checkin"]):
+            update_history = { "$set": { "history.$.timestamp_checkin": time.time(), "history.$.checkin": True } }
+            
+            return products.update_one( document, update_history )
+
+        return { "message": "ERROR" }
+
+    def terminateProduct(serialNumber):
+        document = { "product.serialNumber": serialNumber }
+        projection = { "used": 1, "history.$.checkin": 1 }
+
+        result = products.find_one( document, projection )
+
+        if not result["used"] and result["checkin"]:
+            return products.update_one( document, { "$set": { "used": True } } )
+
+        return { "message": "ERROR" }
