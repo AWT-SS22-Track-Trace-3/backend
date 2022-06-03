@@ -5,10 +5,21 @@ from pydantic import BaseModel
 from typing import List, Any
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from app.database.incidents import Incidents
 
 from app.database.tracking import Tracking
 from .database.authentication import Authentication
+from .database.incidents import Incidents
 from .constants import JWT
+
+
+
+# Definition - access_lvl
+        # 0 Wholesaler, can checkin, checkout, and view associated products
+        # 1 Consumer, can checkin, terminate, and view associated products
+        # 2 Manufacturer, can create, checkout, and view associated products
+        # 3 Authorities, can view everything
+        # 4 Admin, has admin access
 
 
 
@@ -160,4 +171,11 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
 
 @app.get("/terminate/{serial_number}")
 async def terminate(serial_number: str, user: User = Depends(authenticate)):
-    return Tracking.terminate_product(serial_number)
+    if user.access_lvl != 1 or user.access_lvl != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    result = Tracking.terminate_product(serial_number)
+    if result is None:
+        Incidents.report()
+        raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
+
+    return result

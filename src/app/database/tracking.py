@@ -15,7 +15,7 @@ products = client["Tracking"]["products"]
 class Tracking:
 
     def get_product(serialNumber):
-        product = products.find_one( { "product.serialNumber": serialNumber } )
+        return products.find_one( { "product.serialNumber": serialNumber } )
 
     def create_product(product):
         document = { "product.serialNumber": product["serialNumber"] }
@@ -80,4 +80,4 @@ class Tracking:
         if not result["used"] and result["checkin"]:
             return products.update_one( document, { "$set": { "used": True } } )
 
-        return { "message": "ERROR" }
+        return None
