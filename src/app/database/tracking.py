@@ -56,7 +56,7 @@ class Tracking:
 
             return products.update_one( document, update_history )
 
-        return { "message": "ERROR" }
+        return None
 
     def checkin_product(product):
         document = { "product.serialNumber": product.serialNumber }
@@ -69,7 +69,7 @@ class Tracking:
             
             return products.update_one( document, update_history )
 
-        return { "message": "ERROR" }
+        return None
 
     def terminate_product(serialNumber):
         document = { "product.serialNumber": serialNumber }

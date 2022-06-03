@@ -143,7 +143,14 @@ class Product(BaseModel):
 
 @app.post("/create")
 async def create(product: Product, user: User = Depends(authenticate)):
-    return Tracking.create_product(product)
+    if user.access_lvl != 2 or user.access_lvl != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    result = Tracking.create_product(product)
+    if result is None:
+        Incidents.report()
+        raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
+
+    return result
 
 class CheckoutBody(BaseModel):
     transaction_date: str
@@ -155,7 +162,14 @@ class CheckoutBody(BaseModel):
 
 @app.post("/checkout")
 async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
-    return Tracking.checkout_product(body)
+    if user.access_lvl != 0 or user.access_lvl != 2 or user.access_lvl != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    result = Tracking.checkout_product(body)
+    if result is None:
+        Incidents.report()
+        raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
+
+    return result
 
 class CheckinBody(BaseModel):
     transaction_date: str
@@ -167,7 +181,14 @@ class CheckinBody(BaseModel):
 
 @app.post("/checkin")
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
-    return Tracking.checkin_product(body)
+    if user.access_lvl != 0 or user.access_lvl != 1 or user.access_lvl != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    result = Tracking.checkin_product(body)
+    if result is None:
+        Incidents.report()
+        raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
+
+    return result
 
 @app.get("/terminate/{serial_number}")
 async def terminate(serial_number: str, user: User = Depends(authenticate)):
