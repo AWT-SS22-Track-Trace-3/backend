@@ -18,7 +18,7 @@ from .constants import JWT
         # 0 Wholesaler, can checkin, checkout, and view associated products
         # 1 Consumer, can checkin, terminate, and view associated products
         # 2 Manufacturer, can create, checkout, and view associated products
-        # 3 Authorities, can view everything
+        # 3 Authorities, can signup users and view everything
         # 4 Admin, has admin access
 
 
@@ -102,6 +102,13 @@ async def test(id: int, user: User = Depends(authenticate)):
             #        API-Login
             #<------------------------>
 
+@app.get("/is_username/{username}")
+async def is_username(username: str, user: User = Depends(authenticate)):
+    if user.access_lvl != 3 and user.access_lvl != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization level!")
+
+    return Authentication.is_username(username)
+
 class New_User(BaseModel):
     username: str
     password: str
@@ -111,7 +118,7 @@ class New_User(BaseModel):
 
 @app.post("/signup")
 async def signup(new_user: New_User, user: User = Depends(authenticate)):
-    if user.access_lvl != 1:
+    if user.access_lvl != 3 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization level!")
 
     return Authentication.signup(new_user)
@@ -143,7 +150,7 @@ class Product(BaseModel):
 
 @app.post("/create")
 async def create(product: Product, user: User = Depends(authenticate)):
-    if user.access_lvl != 2 or user.access_lvl != 4:
+    if user.access_lvl != 2 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.create_product(product)
     if result is None:
@@ -162,7 +169,7 @@ class CheckoutBody(BaseModel):
 
 @app.post("/checkout")
 async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
-    if user.access_lvl != 0 or user.access_lvl != 2 or user.access_lvl != 4:
+    if user.access_lvl != 0 and user.access_lvl != 2 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.checkout_product(body)
     if result is None:
@@ -181,7 +188,7 @@ class CheckinBody(BaseModel):
 
 @app.post("/checkin")
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
-    if user.access_lvl != 0 or user.access_lvl != 1 or user.access_lvl != 4:
+    if user.access_lvl != 0 and user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.checkin_product(body)
     if result is None:
@@ -192,7 +199,7 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
 
 @app.get("/terminate/{serial_number}")
 async def terminate(serial_number: str, user: User = Depends(authenticate)):
-    if user.access_lvl != 1 or user.access_lvl != 4:
+    if user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.terminate_product(serial_number)
     if result is None:

@@ -42,8 +42,14 @@ class Authentication:
 
 
 #<------------------------>
-#   API-Authentification
+#        API-Signup
 #<------------------------>
 
+    def is_username(username):
+        if users.find_one( { "username": username } ) > 0:
+            return { "is_username": True }
+        return { "is_username": False }
+
     def signup(new_user):
+        new_user["password"] = pass_context.hash(new_user["password"])
         return users.insert_one(new_user)
