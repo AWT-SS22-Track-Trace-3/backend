@@ -14,9 +14,6 @@ products = client["Tracking"]["products"]
 
 class Tracking:
 
-    def get_product(serialNumber):
-        return products.find_one( { "product.serialNumber": serialNumber } )
-
     def create_product(product, owner):
         document = { "product.serialNumber": product["serialNumber"] }
 

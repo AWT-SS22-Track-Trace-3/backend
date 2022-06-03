@@ -4,3 +4,4 @@ class Incidents:
 
     def report():
         return True
+        

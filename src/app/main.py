@@ -207,3 +207,15 @@ async def terminate(serial_number: str, user: User = Depends(authenticate)):
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
     return result
+
+            #<------------------------>
+            #    API-Search_Products
+            #<------------------------>
+
+
+
+            #<------------------------>
+            #    API-Report_Incidents
+            #<------------------------>
+
+            
