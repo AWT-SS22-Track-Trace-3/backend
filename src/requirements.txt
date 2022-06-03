@@ -2,3 +2,6 @@ uvicorn
 fastapi
 requests
 validators
+python-multipart
+python-jose
+passlib

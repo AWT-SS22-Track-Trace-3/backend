@@ -1,7 +1,7 @@
 import pymongo
 import time
 
-from .constants import *
+from ..constants import *
 
 # pymongo connecting to mongoDB
 client = pymongo.MongoClient(
@@ -12,7 +12,7 @@ client = pymongo.MongoClient(
 )
 products = client["Tracking"]["products"]
 
-class DB:
+class Tracking:
 
     def getProduct(serialNumber):
         product = products.find_one( { "product.serialNumber": serialNumber } )
