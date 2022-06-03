@@ -10,9 +10,13 @@ from app.database.tracking import Tracking
 from .database.authentication import Authentication
 from .constants import JWT
 
+
+
 app = FastAPI()
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
 
 @app.on_event("startup")
 async def startup_event():
@@ -21,6 +25,11 @@ async def startup_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     print("shutdown")
+
+
+#<------------------------>
+#     Authentification
+#<------------------------>
 
 class Token(BaseModel):
     access_token: str
@@ -68,7 +77,9 @@ async def authenticate(token: str = Depends(oauth2_scheme)):
     return user
 
 
-
+#<------------------------>
+#           API
+#<------------------------>
 
 @app.get("/test/{id}")
 async def test(id: int, user: User = Depends(authenticate)):

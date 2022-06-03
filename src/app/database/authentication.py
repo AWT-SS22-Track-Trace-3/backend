@@ -25,6 +25,10 @@ users = client["Authentication"]["users"]
 
 class Authentication:
 
+#<------------------------>
+#     Authentification
+#<------------------------>
+
     def is_user(username, password):
         #return True
         hashed_password = pass_context.hash(password)
@@ -35,6 +39,11 @@ class Authentication:
     def get_user(username):
         #return fake_user
         return users.find_one( { "username": username }, { "password": 0 } )
+
+
+#<------------------------>
+#   API-Authentification
+#<------------------------>
 
     def signup(username, password):
         return True
