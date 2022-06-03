@@ -45,11 +45,5 @@ class Authentication:
 #   API-Authentification
 #<------------------------>
 
-    def signup(username, password):
-        return True
-
-    def login(username, password):
-        return True
-
-    def logout(token):
-        return True
+    def signup(new_user):
+        return users.insert_one(new_user)

@@ -14,10 +14,10 @@ products = client["Tracking"]["products"]
 
 class Tracking:
 
-    def getProduct(serialNumber):
+    def get_product(serialNumber):
         product = products.find_one( { "product.serialNumber": serialNumber } )
 
-    def createProduct(product):
+    def create_product(product):
         document = { "product.serialNumber": product["serialNumber"] }
 
         if products.find_one( document ).count() == 0:
@@ -30,8 +30,8 @@ class Tracking:
 
         return { "message": "ERROR" }
 
-    def checkoutProduct(serialNumber, owner, f_owner):
-        document = { "product.serialNumber": serialNumber }
+    def checkout_product(product):
+        document = { "product.serialNumber": product.serialNumber }
         projection = { "used": 1, "history.$.checkin": 1 }
 
         result = products.find_one( document, projection )
@@ -43,8 +43,8 @@ class Tracking:
                                         "$each": [
                                             {
                                                 "timestamp_checkout": time.time(),
-                                                "owner": owner,
-                                                "future_owner": f_owner,
+                                                "owner": product.owner,
+                                                "future_owner": product.f_owner,
                                                 "timestamp_checkin": None,
                                                 "checkin": False
                                             }
@@ -58,8 +58,8 @@ class Tracking:
 
         return { "message": "ERROR" }
 
-    def checkinProduct(serialNumber, owner, prev_owner):
-        document = { "product.serialNumber": serialNumber }
+    def checkin_product(product):
+        document = { "product.serialNumber": product.serialNumber }
         projection = { "used": 1, "history.$.checkin": 1 }
 
         result = products.find_one( document, projection )
@@ -71,7 +71,7 @@ class Tracking:
 
         return { "message": "ERROR" }
 
-    def terminateProduct(serialNumber):
+    def terminate_product(serialNumber):
         document = { "product.serialNumber": serialNumber }
         projection = { "used": 1, "history.$.checkin": 1 }
 

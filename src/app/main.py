@@ -87,55 +87,77 @@ async def test(id: int, user: User = Depends(authenticate)):
 
     return user#{ "message": "Success!" }
 
+            #<------------------------>
+            #        API-Login
+            #<------------------------>
+
+class New_User(BaseModel):
+    username: str
+    password: str
+    company: str
+    address: str
+    access_lvl: int
+
+@app.post("/signup")
+async def signup(new_user: New_User, user: User = Depends(authenticate)):
+    if user.access_lvl != 1:
+        raise HTTPException(status_code=400, detail="Insufficient authorization level!")
+
+    return Authentication.signup(new_user)
+
+            #<------------------------>
+            #        API-Login
+            #<------------------------>
+
 class Product(BaseModel):
     name: str
-    commonName: Any
+    common_name: Any
     form: str
     strength: str
-    drugCode: Any
-    packSize: int
-    packType: Any
-    serialNumber: str
-    reimbursmentNumber: Any
+    drug_code: Any
+    pack_size: int
+    pack_type: Any
+    serial_number: str
+    reimbursment_number: Any
     containers: Any
-    batchNumber: str
-    expiryDate: str
+    batch_number: str
+    expiry_date: str
     coding: Any
-    marketedStates: Any
-    manufacturerName: Any
-    manufacturerAdress: Any
-    marketingHolderName: Any
-    marketingHolderAdress: Any
+    marketed_states: Any
+    manufacturer_name: Any
+    manufacturer_adress: Any
+    marketing_holder_name: Any
+    marketing_holder_adress: Any
     wholesaler: Any
 
 @app.post("/create")
 async def create(product: Product, user: User = Depends(authenticate)):
-    return Tracking.createProduct(product)
+    return Tracking.create_product(product)
 
 class CheckoutBody(BaseModel):
-    transactionDate: str
-    shipmentDate: str
-    Owner: str
-    OwnerAddress: str
-    futureOwner: str
-    futureOwnerAddress: str
+    transaction_date: str
+    shipment_date: str
+    owner: str
+    owner_address: str
+    f_owner: str
+    f_owner_address: str
 
 @app.post("/checkout")
 async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
-    return Tracking.checkoutProduct(body)
+    return Tracking.checkout_product(body)
 
 class CheckinBody(BaseModel):
-    transactionDate: str
-    shipmentDate: str
-    prevOwner: str
-    prevOwnerAddress: str
-    Owner: str
-    OwnerAddress: str
+    transaction_date: str
+    shipment_date: str
+    prev_owner: str
+    prev_owner_address: str
+    owner: str
+    owner_address: str
 
 @app.post("/checkin")
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
-    return Tracking.checkinProduct(body)
+    return Tracking.checkin_product(body)
 
-@app.get("/terminate/{serialNumber}")
-async def terminate(serialNumber: str, user: User = Depends(authenticate)):
-    return Tracking.terminateProduct()
+@app.get("/terminate/{serial_number}")
+async def terminate(serial_number: str, user: User = Depends(authenticate)):
+    return Tracking.terminate_product(serial_number)
