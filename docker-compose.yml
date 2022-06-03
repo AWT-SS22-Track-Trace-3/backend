@@ -5,4 +5,23 @@ services:
         container_name: backend
         ports:
             - "8000:8000"
-            
+    mongo:
+        image: mongo
+        container_name: backend-mongo
+        ports:
+            - "27017:27017"
+        environment:
+            MONGO_INITDB_DATABASE: products
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: SuperSecret
+    mongo-express:
+        image: mongo-express
+        container_name: backend-mongo-express
+        ports:
+            - "8081:8081"
+        environment:
+            ME_CONFIG_MONGODB_SERVER: mongo
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: SuperSecret
+            ME_CONFIG_BASICAUTH_USERNAME: admin
+            ME_CONFIG_BASICAUTH_PASSWORD: SuperSecret
