@@ -17,13 +17,14 @@ class Tracking:
     def get_product(serialNumber):
         return products.find_one( { "product.serialNumber": serialNumber } )
 
-    def create_product(product):
+    def create_product(product, owner):
         document = { "product.serialNumber": product["serialNumber"] }
 
         if products.find_one( document ).count() == 0:
             entry = {
                 "used": False,
                 "history": [],
+                "owner": [ owner ],
                 "product": product
             }
             return products.insert_one(product)
@@ -58,14 +59,22 @@ class Tracking:
 
         return None
 
-    def checkin_product(product):
+    def checkin_product(product, owner):
         document = { "product.serialNumber": product.serialNumber }
         projection = { "used": 1, "history.$.checkin": 1 }
 
         result = products.find_one( document, projection )
 
         if not (result["used"] and result["checkin"]):
-            update_history = { "$set": { "history.$.timestamp_checkin": time.time(), "history.$.checkin": True } }
+            update_history = {
+                "$set": {
+                    "history.$.timestamp_checkin": time.time(),
+                    "history.$.checkin": True
+                },
+                "$push": {
+                    "owner": owner
+                }
+            }
             
             return products.update_one( document, update_history )
 

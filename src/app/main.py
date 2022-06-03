@@ -61,7 +61,7 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return { "access_token": create_token({ "sub": form_data.username }), "token_type": "bearer" }
 
 class User(BaseModel):
-    username: str | None = None
+    username: str
     password: str | None = None 
     company: str | None = None
     address: str | None = None
@@ -152,7 +152,7 @@ class Product(BaseModel):
 async def create(product: Product, user: User = Depends(authenticate)):
     if user.access_lvl != 2 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.create_product(product)
+    result = Tracking.create_product(product, user.username)
     if result is None:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
@@ -190,7 +190,7 @@ class CheckinBody(BaseModel):
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
     if user.access_lvl != 0 and user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.checkin_product(body)
+    result = Tracking.checkin_product(body, user.username)
     if result is None:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")

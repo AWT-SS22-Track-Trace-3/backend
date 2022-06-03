@@ -32,13 +32,16 @@ class Authentication:
     def is_user(username, password):
         #return True
         hashed_password = pass_context.hash(password)
-        if users.find_one( { "username": username, "password": hashed_password }, { "password": 0 } ) > 0:
+        if users.find_one( { "username": username, "password": hashed_password }, { "password": 0 } ).count() > 0:
             return True
         return False
 
     def get_user(username):
         #return fake_user
-        return users.find_one( { "username": username }, { "password": 0 } )
+        result = users.find_one( { "username": username }, { "password": 0 } )
+        if result.count() > 0:
+            return result
+        return None
 
 
 #<------------------------>
@@ -46,7 +49,7 @@ class Authentication:
 #<------------------------>
 
     def is_username(username):
-        if users.find_one( { "username": username } ) > 0:
+        if users.find_one( { "username": username } ).count() > 0:
             return { "is_username": True }
         return { "is_username": False }
 
