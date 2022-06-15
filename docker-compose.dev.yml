@@ -1,0 +1,42 @@
+version: "3.9"
+volumes:
+  mongodata:
+services:
+  web:
+    build: src/
+    container_name: backend
+    command: uvicorn --host 0.0.0.0 --reload app.main:app
+    volumes:
+      - ./src/app:/app
+    ports:
+      - "8000:8000"
+  mongo:
+    image: mongo
+    container_name: backend-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodata:/data/db
+      - ./data:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    environment:
+      MONGO_INITDB_DATABASE: products
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: SuperSecret
+  dbseed:
+    build: ./dbseed
+    depends_on:
+      - mongo
+
+#  mongo-express:
+#    image: mongo-express
+#    container_name: backend-mongo-express
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - mongo
+#    environment:
+#      ME_CONFIG_MONGODB_SERVER: mongo
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: SuperSecret
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: SuperSecret
