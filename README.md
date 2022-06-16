@@ -8,7 +8,16 @@ Description...
 
 ## API
 
+### Definition - access_lvl
+- 0: Wholesaler, can checkin, checkout, and view associated products
+- 1: Consumer, can checkin, terminate, and view associated products
+- 2: Manufacturer, can create, checkout, and view associated products
+- 3: Authorities, can signup users and view everything
+- 4: Admin, has admin access
+
 ### `/token`
+
+- generates session token
 
 POST: 
 ```json
@@ -28,6 +37,8 @@ Response:
 
 
 ### `test/{id}`
+
+- testing endpoint, modify as you please
 
 Header:
 ```json
@@ -57,6 +68,9 @@ Response:
 
 ### `/is_username/{username}`
 
+- checks if username exists
+- access_lvl: 3 & 4
+
 Header:
 ```json
 {
@@ -80,6 +94,9 @@ Response:
 
 
 ### `/signup`
+
+- signups new user
+- access_lvl: 3 & 4
 
 Header:
 ```json
@@ -108,6 +125,9 @@ Response:
 
 
 ### `/create`
+
+- inserts new product into database
+- access_lvl: 2 & 4
 
 Header:
 ```json
@@ -146,6 +166,9 @@ Response: `None
 
 ### `/checkout`
 
+- updates product history to "in transport to…"
+- access_lvl: 0, 2, & 4
+
 Header:
 ```json
 {
@@ -170,6 +193,9 @@ Response: `None`
 
 ### `/checkin`
 
+- updates product history to "arrived at…"
+- access_lvl: 0, 1, & 4
+
 Header:
 ```json
 {
@@ -193,6 +219,9 @@ Response: `None`
 
 
 ### `/terminate/{serial_number}`
+
+- updates product history to "has been used"
+- access_lvl: 1 & 4
 
 Header:
 ```json
