@@ -8,75 +8,117 @@ Description...
 
 ## API
 
-`/token`
+### `/token`
 
-POST: {
+POST: 
+```json
+{
  username: str
  password: str
 }
+```
 
-Response: {
+Response: 
+```json
+{  
  access_token: str
  token_type: str
 }
+```
 
-`test/{id}`
 
-Header: {
+### `test/{id}`
+
+Header:
+```json
+{
  access_token: str
 }
+```
 
-GET: {
+GET: 
+```json
+{
  id: str
 }
+```
 
-Response: {
+Response:
+```json
+{
  username: str
  password: str | None = None 
  company: str | None = None
  address: str | None = None
  access_lvl: int
 }
+```
 
-`/is_username/{username}`
 
-Header: {
+### `/is_username/{username}`
+
+Header:
+```json
+{
  access_token: str
 }
+```
 
-GET: {
+GET:
+```json
+{
  username: str
 }
+```
 
-Response: {
+Response:
+```json
+{
  is_username: bool
 }
+```
 
-`/signup`
 
-Header: {
- access_token: str
+### `/signup`
+
+Header:
+```json
+{
+ access_token: str  
 }
+```
 
-POST: {
+POST:
+```json
+{
  username: str
  password: str
  company: str
  address: str
  access_lvl: int
 }
+```
 
-Response: {
+Response:
+```json
+{
  is_username: bool
 }
+```
 
-`/create`
 
-Header: {
+### `/create`
+
+Header:
+```json
+{
  access_token: str
 }
+```
 
-POST: {
+POST:
+```json
+{
  name: str
  common_name: Any
  form: str
@@ -97,16 +139,23 @@ POST: {
  marketing_holder_adress: Any
  wholesaler: Any
 }
+```
 
-Response: None
+Response: `None
 
-`/checkout`
 
-Header: {
+### `/checkout`
+
+Header:
+```json
+{
  access_token: str
 }
+```
 
-POST: {
+POST:
+```json
+{
  transaction_date: str
  shipment_date: str
  owner: str
@@ -114,17 +163,23 @@ POST: {
  f_owner: str
  f_owner_address: str
 }
+```
 
-Response: None
+Response: `None`
 
 
-`/checkin`
+### `/checkin`
 
-Header: {
+Header:
+```json
+{
  access_token: str
 }
+```
 
-POST: {
+POST:
+```json
+{
  transaction_date: str
  shipment_date: str
  prev_owner: str
@@ -132,20 +187,29 @@ POST: {
  owner: str
  owner_address: str
 }
+```
 
-Response: None
+Response: `None`
 
-`/terminate/{serial_number}`
 
-Header: {
+### `/terminate/{serial_number}`
+
+Header:
+```json
+{
  access_token: str
 }
+```
 
-GET: {
+GET:
+```json
+{
  serial_number: str
 }
+```
 
-Response: None
+Response: `None`
+
 
 ## Database Setup
 
