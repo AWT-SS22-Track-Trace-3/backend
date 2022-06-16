@@ -161,7 +161,7 @@ POST:
 }
 ```
 
-Response: `None
+Response: `None`
 
 
 ### `/checkout`
