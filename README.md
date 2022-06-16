@@ -6,6 +6,24 @@ Description...
 
  `docker-compose up`
 
+## API
+
+`/token`
+
+`test/{id}`
+
+`/is_username/{username}`
+
+`/signup`
+
+`/create`
+
+`/checkout`
+
+`/checkin`
+
+`/terminate/{serial_number}`
+
 ## Database Setup
 
 The Docker setup will automatically create a `products` database with a `products` collection in it.
