@@ -5,6 +5,9 @@ services:
   web:
     build: src/
     container_name: backend
+    command: uvicorn --host 0.0.0.0 --reload app.main:app
+    volumes:
+      - ./src/app:/app
     ports:
       - "8000:8000"
   mongo:
@@ -23,16 +26,17 @@ services:
     build: ./dbseed
     depends_on:
       - mongo
-  mongo-express:
-    image: mongo-express
-    container_name: backend-mongo-express
-    ports:
-      - "8081:8081"
-    depends_on:
-      - mongo
-    environment:
-      ME_CONFIG_MONGODB_SERVER: mongo
-      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-      ME_CONFIG_MONGODB_ADMINPASSWORD: SuperSecret
-      ME_CONFIG_BASICAUTH_USERNAME: admin
-      ME_CONFIG_BASICAUTH_PASSWORD: SuperSecret
+
+#  mongo-express:
+#    image: mongo-express
+#    container_name: backend-mongo-express
+#    ports:
+#      - "8081:8081"
+#    depends_on:
+#      - mongo
+#    environment:
+#      ME_CONFIG_MONGODB_SERVER: mongo
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: SuperSecret
+#      ME_CONFIG_BASICAUTH_USERNAME: admin
+#      ME_CONFIG_BASICAUTH_PASSWORD: SuperSecret
