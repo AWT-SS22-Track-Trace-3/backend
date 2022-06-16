@@ -39,7 +39,7 @@ async def shutdown_event():
 
 
 #<------------------------>
-#     Authentification
+#     Authentication
 #<------------------------>
 
 class Token(BaseModel):
