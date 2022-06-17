@@ -39,7 +39,7 @@ async def shutdown_event():
 
 
 #<------------------------>
-#     Authentification
+#     Authentication
 #<------------------------>
 
 class Token(BaseModel):
@@ -209,7 +209,7 @@ async def terminate(serial_number: str, user: User = Depends(authenticate)):
     return result
 
             #<------------------------>
-            #    API-Search_Products
+            #    API-Trace_Products
             #<------------------------>
 
 
