@@ -1,17 +1,9 @@
-from tokenize import Token
-from fastapi import APIRouter, HTTPException, Depends, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Any
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from app.database.incidents import Incidents
 
-from app.database.tracking import Tracking
 from ..database.authentication import Authentication
-from ..database.incidents import Incidents
-from ..constants import JWT
-from authentication import User, authenticate
+from .authentication import User, authenticate
 
 
 
@@ -24,7 +16,9 @@ from authentication import User, authenticate
 
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["incidents"]
+)
 
 
 

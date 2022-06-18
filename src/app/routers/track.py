@@ -1,17 +1,10 @@
-from tokenize import Token
-from fastapi import APIRouter, HTTPException, Depends, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List, Any
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from app.database.incidents import Incidents
 
-from app.database.tracking import Tracking
-from ..database.authentication import Authentication
+from .authentication import User, authenticate
 from ..database.incidents import Incidents
-from ..constants import JWT
-from authentication import User, authenticate
+from ..database.tracking import Tracking
 
 
 
@@ -24,7 +17,9 @@ from authentication import User, authenticate
 
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["tracking"]
+)
 
 
 
@@ -53,7 +48,7 @@ class Product(BaseModel):
     marketing_holder_adress: Any
     wholesaler: Any
 
-@router.post("/create", tags=["tracking"])
+@router.post("/create")
 async def create(product: Product, user: User = Depends(authenticate)):
     if user.access_lvl != 2 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
@@ -72,7 +67,7 @@ class CheckoutBody(BaseModel):
     f_owner: str
     f_owner_address: str
 
-@router.post("/checkout", tags=["tracking"])
+@router.post("/checkout")
 async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
     if user.access_lvl != 0 and user.access_lvl != 2 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
@@ -91,7 +86,7 @@ class CheckinBody(BaseModel):
     owner: str
     owner_address: str
 
-@router.post("/checkin", tags=["tracking"])
+@router.post("/checkin")
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
     if user.access_lvl != 0 and user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
@@ -102,7 +97,7 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
 
     return result
 
-@router.get("/terminate/{serial_number}", tags=["tracking"])
+@router.get("/terminate/{serial_number}")
 async def terminate(serial_number: str, user: User = Depends(authenticate)):
     if user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")

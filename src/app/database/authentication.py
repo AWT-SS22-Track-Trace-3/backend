@@ -1,6 +1,6 @@
+from passlib.context import CryptContext
 from click import pass_context
 import pymongo
-from passlib.context import CryptContext
 
 from ..constants import *
 
@@ -15,13 +15,13 @@ client = pymongo.MongoClient(
 )
 users = client["Authentication"]["users"]
 
-#fake_user = {
-#    "username": "Pharma",
-#    "password": "test",
-#    "company": "Bayer",
-#    "address": "Test Straße 1",
-#    "access_lvl": 1
-#}
+fake_user = {
+    "username": "Admin",
+    "password": "test",
+    "company": "Bayer",
+    "address": "Test Straße 1",
+    "access_lvl": 4
+}
 
 class Authentication:
 
@@ -30,18 +30,18 @@ class Authentication:
 #<------------------------>
 
     def is_user(username, password):
-        #return True
-        hashed_password = pass_context.hash(password)
-        if users.find_one( { "username": username, "password": hashed_password }, { "password": 0 } ).count() > 0:
-            return True
-        return False
+        return True
+        #hashed_password = pass_context.hash(password)
+        #if users.find_one( { "username": username, "password": hashed_password }, { "password": 0 } ).count() > 0:
+        #    return True
+        #return False
 
     def get_user(username):
-        #return fake_user
-        result = users.find_one( { "username": username }, { "password": 0 } )
-        if result.count() > 0:
-            return result
-        return None
+        return fake_user
+        #result = users.find_one( { "username": username }, { "password": 0 } )
+        #if result.count() > 0:
+        #    return result
+        #return None
 
 
 #<------------------------>

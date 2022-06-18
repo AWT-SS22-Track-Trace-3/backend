@@ -1,10 +1,10 @@
-from tokenize import Token
-from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from pydantic import BaseModel
-from typing import List, Any
-from jose import JWTError, jwt
+from fastapi import APIRouter, HTTPException, Depends, status
 from datetime import datetime, timedelta
+from pydantic import BaseModel
+from jose import JWTError, jwt
+from typing import List, Any
+from tokenize import Token
 
 from ..database.authentication import Authentication
 from ..constants import JWT
@@ -20,7 +20,9 @@ from ..constants import JWT
 
 
 
-router = APIRouter()
+router = APIRouter(
+    tags=["authentication"]
+)
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -42,7 +44,7 @@ def create_token(data: dict):
 
     return jwt.encode(to_encode, JWT['SECRET_KEY'], algorithm=JWT['ALGORITHM'])
 
-@router.post("/token", response_model=Token, tags=["authentication"])
+@router.post("/token", response_model=Token)
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     if not Authentication.is_user(form_data.username, form_data.password):
         raise HTTPException(status_code=400, detail="Incorrect username or password!")
