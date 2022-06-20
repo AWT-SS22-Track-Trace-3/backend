@@ -42,8 +42,8 @@ class Product(BaseModel):
     expiry_date: str
     coding: Any
     marketed_states: Any
-    manufacturer_name: Any
-    manufacturer_adress: Any
+    manufacturer_names: Any
+    manufacturer_adresses: Any
     marketing_holder_name: Any
     marketing_holder_adress: Any
     wholesaler: Any
@@ -97,11 +97,14 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
 
     return result
 
-@router.get("/terminate/{serial_number}")
-async def terminate(serial_number: str, user: User = Depends(authenticate)):
+class TerminateBody(BaseModel):
+    serial_number: str
+
+@router.post("/terminate")
+async def terminate(body: TerminateBody, user: User = Depends(authenticate)):
     if user.access_lvl != 1 and user.access_lvl != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.terminate_product(serial_number)
+    result = Tracking.terminate_product(body.serial_number)
     if result is None:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
