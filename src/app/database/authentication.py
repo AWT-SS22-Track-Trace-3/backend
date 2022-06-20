@@ -1,5 +1,4 @@
 from passlib.context import CryptContext
-from click import pass_context
 import pymongo
 
 from ..constants import *
@@ -13,15 +12,7 @@ client = pymongo.MongoClient(
     username=MONGO['USERNAME'],
     password=MONGO['PASSWORD']
 )
-users = client["Authentication"]["users"]
-
-#fake_user = {
-#    "username": "Admin",
-#    "password": "test",
-#    "company": "Bayer",
-#    "address": "Test Straße 1",
-#    "access_lvl": 4
-#}
+users = client["track-trace"]["users"]
 
 class Authentication:
 
@@ -30,16 +21,15 @@ class Authentication:
 #<------------------------>
 
     def is_user(username, password):
-        #return True
-        hashed_password = pass_context.hash(password)
-        if users.find_one( { "username": username, "password": hashed_password }, { "password": 0 } ).count() > 0:
-            return True
+        hashed_password = users.find_one( { "username": username }, { "password": 1 } )
+        if hashed_password is not None:
+            if pwd_context.verify(password, hashed_password["password"]):
+                return True
         return False
 
     def get_user(username):
-        #return fake_user
         result = users.find_one( { "username": username }, { "password": 0 } )
-        if result.count() > 0:
+        if result is not None:
             return result
         return None
 
@@ -49,10 +39,14 @@ class Authentication:
 #<------------------------>
 
     def is_username(username):
-        if users.find_one( { "username": username } ).count() > 0:
+        if users.find_one( { "username": username } ) is not None:
             return { "is_username": True }
         return { "is_username": False }
 
     def signup(new_user):
-        new_user["password"] = pass_context.hash(new_user["password"])
-        return users.insert_one(new_user)
+        if users.find_one( { "username": new_user["username"] } ) is not None:
+            return False
+
+        new_user["password"] = pwd_context.hash(new_user["password"])
+
+        return users.insert_one(new_user).acknowledged

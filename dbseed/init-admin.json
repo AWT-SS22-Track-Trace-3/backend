@@ -1,0 +1,9 @@
+[
+    {
+        "username": "admin",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Host",
+        "address": "Host Straße",
+        "access_lvl": 4
+    }
+]

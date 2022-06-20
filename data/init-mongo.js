@@ -1,4 +1,4 @@
-db = new Mongo().getDB("products");
+db = new Mongo().getDB("track-trace");
 
 db.createUser({
     user: 'root',
@@ -6,7 +6,7 @@ db.createUser({
     roles: [
         {
             role: 'readWrite',
-            db: 'products',
+            db: 'track-trace',
         },
     ],
 });

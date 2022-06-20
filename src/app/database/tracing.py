@@ -9,7 +9,7 @@ client = pymongo.MongoClient(
     username=MONGO['USERNAME'],
     password=MONGO['PASSWORD']
 )
-products = client["Tracking"]["products"]
+products = client["track-trace"]["products"]
 
 # This DB is used to search products
 
