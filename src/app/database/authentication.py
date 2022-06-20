@@ -1,6 +1,6 @@
+from passlib.context import CryptContext
 from click import pass_context
 import pymongo
-from passlib.context import CryptContext
 
 from ..constants import *
 
@@ -16,11 +16,11 @@ client = pymongo.MongoClient(
 users = client["Authentication"]["users"]
 
 #fake_user = {
-#    "username": "Pharma",
+#    "username": "Admin",
 #    "password": "test",
 #    "company": "Bayer",
 #    "address": "Test Straße 1",
-#    "access_lvl": 1
+#    "access_lvl": 4
 #}
 
 class Authentication:
