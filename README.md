@@ -19,8 +19,8 @@ Description...
 
 - generates session token
 
-POST: 
-```json
+POST (x-www-form-urlencoded): 
+```
 {
  username: str
  password: str
