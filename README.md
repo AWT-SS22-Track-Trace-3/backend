@@ -15,6 +15,7 @@ Description...
 - 3: Authorities, can signup users and view everything
 - 4: Admin, has admin access
 
+
 ### `/token`
 
 - generates session token
