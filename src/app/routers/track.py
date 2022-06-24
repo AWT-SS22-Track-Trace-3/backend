@@ -102,7 +102,7 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
 class TerminateBody(BaseModel):
     serial_number: str
 
-@router.post("/terminate")
+@router.put("/terminate")
 async def terminate(body: TerminateBody, user: User = Depends(authenticate)):
     if user["access_lvl"] != 1 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
