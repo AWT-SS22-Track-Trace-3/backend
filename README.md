@@ -33,6 +33,7 @@ Response:
 {  
  access_token: str
  token_type: str
+ access_lvl: int
 }
 ```
 
