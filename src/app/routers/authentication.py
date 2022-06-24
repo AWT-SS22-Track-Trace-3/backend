@@ -36,6 +36,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 class Token(BaseModel):
     access_token: str
     token_type: str
+    access_lvl: int
 
 def create_token(data: dict):
     to_encode = data.copy()
