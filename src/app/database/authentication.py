@@ -21,11 +21,11 @@ class Authentication:
 #<------------------------>
 
     def is_user(username, password):
-        hashed_password = users.find_one( { "username": username }, { "password": 1 } )
-        if hashed_password is not None:
-            if pwd_context.verify(password, hashed_password["password"]):
-                return True
-        return False
+        user = users.find_one( { "username": username }, { "password": 1, "access_lvl": 1 } )
+        if user is not None:
+            if pwd_context.verify(password, user["password"]):
+                return [ True, user["access_lvl"] ]
+        return [ False, None ]
 
     def get_user(username):
         result = users.find_one( { "username": username }, { "password": 0 } )
