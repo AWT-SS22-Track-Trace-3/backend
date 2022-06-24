@@ -1,3 +1,4 @@
+from os import access
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, Depends, status
 from datetime import datetime, timedelta
@@ -35,6 +36,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 class Token(BaseModel):
     access_token: str
     token_type: str
+    access_lvl: int
 
 def create_token(data: dict):
     to_encode = data.copy()
@@ -46,9 +48,10 @@ def create_token(data: dict):
 
 @router.post("/token", response_model=Token)
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
-    if not Authentication.is_user(form_data.username, form_data.password):
+    user_info = Authentication.is_user(form_data.username, form_data.password)
+    if not user_info[0]:
         raise HTTPException(status_code=400, detail="Incorrect username or password!")
-    return { "access_token": create_token({ "sub": form_data.username }), "token_type": "bearer" }
+    return { "access_token": create_token({ "sub": form_data.username }), "token_type": "bearer", "access_lvl": user_info[1] }
 
 class User(BaseModel):
     username: str

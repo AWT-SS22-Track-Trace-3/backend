@@ -4,6 +4,8 @@ volumes:
 services:
   web:
     build: src/
+    depends_on:
+      - mongo
     container_name: backend
     ports:
       - "8000:8000"
@@ -16,7 +18,7 @@ services:
       - mongodata:/data/db
       - ./data:/docker-entrypoint-initdb.d/init-mongo.js:ro
     environment:
-      MONGO_INITDB_DATABASE: products
+      MONGO_INITDB_DATABASE: track-trace
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: SuperSecret
   dbseed:
@@ -25,11 +27,11 @@ services:
       - mongo
   mongo-express:
     image: mongo-express
+    depends_on:
+      - mongo
     container_name: backend-mongo-express
     ports:
       - "8081:8081"
-    depends_on:
-      - mongo
     environment:
       ME_CONFIG_MONGODB_SERVER: mongo
       ME_CONFIG_MONGODB_ADMINUSERNAME: root

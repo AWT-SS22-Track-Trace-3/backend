@@ -15,6 +15,7 @@ Description...
 - 3: Authorities, can signup users and view everything
 - 4: Admin, has admin access
 
+
 ### `/token`
 
 - generates session token
@@ -32,6 +33,7 @@ Response:
 {  
  access_token: str
  token_type: str
+ access_lvl: int
 }
 ```
 
@@ -179,6 +181,7 @@ Header:
 POST:
 ```json
 {
+ serial_number: str
  transaction_date: str
  shipment_date: str
  owner: str
@@ -206,6 +209,7 @@ Header:
 POST:
 ```json
 {
+ serial_number: str
  transaction_date: str
  shipment_date: str
  prev_owner: str
@@ -218,7 +222,7 @@ POST:
 Response: `None`
 
 
-### `/terminate/{serial_number}`
+### `/terminate`
 
 - updates product history to "has been used"
 - access_lvl: 1 & 4
@@ -230,7 +234,7 @@ Header:
 }
 ```
 
-GET:
+POST:
 ```json
 {
  serial_number: str

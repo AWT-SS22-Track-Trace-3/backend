@@ -28,8 +28,8 @@ router = APIRouter(
 
 @router.get("/is_username/{username}")
 async def is_username(username: str, user: User = Depends(authenticate)):
-    if user.access_lvl != 3 and user.access_lvl != 4:
-        raise HTTPException(status_code=400, detail="Insufficient authorization level!")
+    if user["access_lvl"] != 3 and user["access_lvl"] != 4:
+        raise HTTPException(status_code=403, detail="Insufficient authorization level!")
 
     return Authentication.is_username(username)
 
@@ -42,7 +42,10 @@ class New_User(BaseModel):
 
 @router.post("/signup")
 async def signup(new_user: New_User, user: User = Depends(authenticate)):
-    if user.access_lvl != 3 and user.access_lvl != 4:
-        raise HTTPException(status_code=400, detail="Insufficient authorization level!")
+    if user["access_lvl"] != 3 and user["access_lvl"] != 4:
+        raise HTTPException(status_code=403, detail="Insufficient authorization level!")
 
-    return Authentication.signup(new_user)
+    if not Authentication.signup(new_user.dict()):
+        raise HTTPException(status_code=406, detail="User already exists!")
+
+    return { "acknowledged": True }

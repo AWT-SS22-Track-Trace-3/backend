@@ -42,24 +42,25 @@ class Product(BaseModel):
     expiry_date: str
     coding: Any
     marketed_states: Any
-    manufacturer_name: Any
-    manufacturer_adress: Any
+    manufacturer_names: Any
+    manufacturer_adresses: Any
     marketing_holder_name: Any
     marketing_holder_adress: Any
     wholesaler: Any
 
 @router.post("/create")
 async def create(product: Product, user: User = Depends(authenticate)):
-    if user.access_lvl != 2 and user.access_lvl != 4:
+    if user["access_lvl"] != 2 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.create_product(product, user.username)
-    if result is None:
+    result = Tracking.create_product(product.dict(), user["username"])
+    if result is False:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return result
+    return { "acknowledged": result }
 
 class CheckoutBody(BaseModel):
+    serial_number: str
     transaction_date: str
     shipment_date: str
     owner: str
@@ -69,16 +70,17 @@ class CheckoutBody(BaseModel):
 
 @router.post("/checkout")
 async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
-    if user.access_lvl != 0 and user.access_lvl != 2 and user.access_lvl != 4:
+    if user["access_lvl"] != 0 and user["access_lvl"] != 2 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.checkout_product(body)
-    if result is None:
+    result = Tracking.checkout_product(body.dict())
+    if result is False:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return result
+    return { "acknowledged": result }
 
 class CheckinBody(BaseModel):
+    serial_number: str
     transaction_date: str
     shipment_date: str
     prev_owner: str
@@ -88,22 +90,25 @@ class CheckinBody(BaseModel):
 
 @router.post("/checkin")
 async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
-    if user.access_lvl != 0 and user.access_lvl != 1 and user.access_lvl != 4:
+    if user["access_lvl"] != 0 and user["access_lvl"] != 1 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.checkin_product(body, user.username)
-    if result is None:
+    result = Tracking.checkin_product(body.dict(), user["username"])
+    if result is False:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return result
+    return { "acknowledged": result }
 
-@router.get("/terminate/{serial_number}")
-async def terminate(serial_number: str, user: User = Depends(authenticate)):
-    if user.access_lvl != 1 and user.access_lvl != 4:
+class TerminateBody(BaseModel):
+    serial_number: str
+
+@router.post("/terminate")
+async def terminate(body: TerminateBody, user: User = Depends(authenticate)):
+    if user["access_lvl"] != 1 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.terminate_product(serial_number)
-    if result is None:
+    result = Tracking.terminate_product(body.serial_number)
+    if result is False:
         Incidents.report()
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return result
+    return { "acknowledged": result }
