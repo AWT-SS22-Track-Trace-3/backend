@@ -6,3 +6,4 @@ pymongo
 python-multipart
 python-jose
 passlib
+pycountry
