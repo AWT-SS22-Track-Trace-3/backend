@@ -1,10 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List, Any
 
 from .authentication import User, authenticate
-from ..database.incidents import Incidents
-from ..database.tracking import Tracking
+from ..database.tracing import Tracing
 
 
 
@@ -23,8 +21,22 @@ router = APIRouter(
 
 
 
-            #<------------------------>
-            #    API-Trace_Products
-            #<------------------------>
+#<------------------------>
+#    API-Trace_Products
+#<------------------------>
 
+class Query(BaseModel):
+    query: str
 
+@router.post("/search")
+async def search(query: Query, user: User = Depends(authenticate)):
+    if user["access_lvl"] != 3 and user["access_lvl"] != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    result = Tracing.search(query)
+    if result is None:
+        raise HTTPException(status_code=400)
+    return result
+
+@router.get("/defined_search")
+async def defined_search(user: User = Depends(authenticate)):
+    return { "result": "None" }

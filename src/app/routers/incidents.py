@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import List, Any
 
-from ..database.authentication import Authentication
 from .authentication import User, authenticate
+from ..database.incidents import Incidents
+from .track import Product
 
 
 
@@ -22,8 +22,26 @@ router = APIRouter(
 
 
 
-            #<------------------------>
-            #    API-Report_Incidents
-            #<------------------------>
+#<------------------------>
+#    API-Report_Incidents
+#<------------------------>
 
-            
+class ReportIncident(BaseModel):
+    type: str
+    product: Product
+
+@router.post("/incident")
+async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
+    incident = {
+        "type": report_incident["type"],
+        "product": report_incident["product"],
+        "user": user
+    }
+    result = Incidents.report(incident)
+    return { "result": result }
+
+@router.get("/heatmap")
+async def heatmap(user: User = Depends(authenticate)):
+    if user["access_lvl"] != 3 and user["access_lvl"] != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    return { "heatmap_data": Incidents.heatmap_data() }
