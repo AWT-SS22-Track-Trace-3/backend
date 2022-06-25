@@ -28,9 +28,9 @@ class Incidents:
         return incidents.insert_one(incident).acknowledged
 
     def heatmap_data():
-        incidents = [ ]
+        heatmap = [ ]
         for c in countries:
-            incidents.append( { c.alpha_2: incidents.count_documents({ "user.country": c.alpha_2 }) } )
+            heatmap.append( { c.alpha_2: incidents.count_documents({ "user.country": c.alpha_2 }) } )
 
-        return incidents
+        return heatmap
         

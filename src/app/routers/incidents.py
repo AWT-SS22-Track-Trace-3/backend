@@ -32,6 +32,7 @@ class ReportIncident(BaseModel):
 
 @router.post("/incident")
 async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
+    report_incident = report_incident.dict()
     incident = {
         "type": report_incident["type"],
         "product": report_incident["product"],
