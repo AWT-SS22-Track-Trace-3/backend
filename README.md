@@ -16,7 +16,9 @@ Description...
 - 4: Admin, has admin access
 
 
-### `/token`
+### Authentication
+
+#### `/token`
 
 - generates session token
 
@@ -38,9 +40,60 @@ Response:
 ```
 
 
-### `test/{id}`
+### Incidents
 
-- testing endpoint, modify as you please
+#### `/incident``
+
+- enpoint to report an incident manually
+- access_lvl: all
+
+Header:
+```json
+{
+ access_token: str  
+}
+```
+
+POST:
+```json
+{
+ type: str
+ product: {
+    name: str
+    common_name: Any
+    form: str
+    strength: str
+    drug_code: Any
+    pack_size: int
+    pack_type: Any
+    serial_number: str
+    reimbursment_number: Any
+    containers: Any
+    batch_number: str
+    expiry_date: str
+    coding: Any
+    marketed_states: Any
+    manufacturer_name: Any
+    manufacturer_adress: Any
+    marketing_holder_name: Any
+    marketing_holder_adress: Any
+    wholesaler: Any
+ }
+}
+```
+
+Response:
+```json
+{
+ acknowledged: bool
+}
+```
+
+
+#### `/heatmap``
+
+- returns data for incident heatmap for countries worldwide
+- access_lvl: 3 & 4
 
 Header:
 ```json
@@ -51,24 +104,20 @@ Header:
 
 GET: 
 ```json
-{
- id: str
-}
+{ }
 ```
 
 Response:
 ```json
 {
- username: str
- password: str | None = None 
- company: str | None = None
- address: str | None = None
- access_lvl: int
+ heatmap_data: [ …, { "DE": int }, … ]
 }
 ```
 
 
-### `/is_username/{username}`
+### Login
+
+#### `/is_username/{username}`
 
 - checks if username exists
 - access_lvl: 3 & 4
@@ -113,6 +162,7 @@ POST:
  username: str
  password: str
  company: str
+ country: str
  address: str
  access_lvl: int
 }
@@ -121,12 +171,43 @@ POST:
 Response:
 ```json
 {
- is_username: bool
+ acknowledged: bool
 }
 ```
 
 
-### `/create`
+### Tracing
+
+#### `/search``
+
+- returns results of POSTed search
+- access_lvl: 3 & 4
+
+Header:
+```json
+{
+ access_token: str
+}
+```
+
+POST:
+```json
+{
+ MongoDB_query
+}
+```
+
+Response:
+```json
+{
+ MongoDB_result
+}
+```
+
+
+### Tracking
+
+#### `/create`
 
 - inserts new product into database
 - access_lvl: 2 & 4
@@ -163,10 +244,15 @@ POST:
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ acknowledged: bool
+}
+```
 
 
-### `/checkout`
+#### `/checkout`
 
 - updates product history to "in transport to…"
 - access_lvl: 0, 2, & 4
@@ -191,10 +277,15 @@ POST:
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ acknowledged: bool
+}
+```
 
 
-### `/checkin`
+#### `/checkin`
 
 - updates product history to "arrived at…"
 - access_lvl: 0, 1, & 4
@@ -219,10 +310,15 @@ POST:
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ acknowledged: bool
+}
+```
 
 
-### `/terminate`
+#### `/terminate`
 
 - updates product history to "has been used"
 - access_lvl: 1 & 4
@@ -241,7 +337,44 @@ POST:
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ acknowledged: bool
+}
+```
+
+
+### Default
+
+#### `/test/{id}`
+
+- testing endpoint, modify as you please
+
+Header:
+```json
+{
+ access_token: str
+}
+```
+
+GET: 
+```json
+{
+ id: str
+}
+```
+
+Response:
+```json
+{
+ username: str
+ password: str | None = None 
+ company: str | None = None
+ address: str | None = None
+ access_lvl: int
+}
+```
 
 
 ## Database Setup

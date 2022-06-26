@@ -46,7 +46,7 @@ async def signup(new_user: New_User, user: User = Depends(authenticate)):
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
         raise HTTPException(status_code=403, detail="Insufficient authorization level!")
 
-    if countries.get(alpha_2=new_user["country"]) is None:
+    if countries.get(alpha_2=new_user.country) is None:
         raise HTTPException(status_code=400, detail="Country does not exist!")
 
     if not Authentication.signup(new_user.dict()):

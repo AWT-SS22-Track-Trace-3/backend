@@ -38,8 +38,8 @@ async def incident(report_incident: ReportIncident, user: User = Depends(authent
         "product": report_incident["product"],
         "user": user
     }
-    result = Incidents.report(incident)
-    return { "result": result }
+    acknowledged = Incidents.report(incident)
+    return { "acknowledged": acknowledged }
 
 @router.get("/heatmap")
 async def heatmap(user: User = Depends(authenticate)):
