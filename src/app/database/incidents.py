@@ -30,7 +30,12 @@ class Incidents:
     def heatmap_data():
         heatmap = [ ]
         for c in countries:
-            heatmap.append( { c.alpha_2: incidents.count_documents({ "user.country": c.alpha_2 }) } )
+            addresses = [ ]
+            for f in incidents.find({ "user.country": c.alpha_2 }, { "_id": 0, "user.address": 1 }):
+                addresses.append(f["user"]["address"])
+            heatmap.append( { c.alpha_2: incidents.count_documents({ "user.country": c.alpha_2 }),
+            "addresses": addresses
+            } )
 
         return heatmap
         

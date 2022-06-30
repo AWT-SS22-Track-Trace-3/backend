@@ -1,3 +1,4 @@
+from json import dumps
 import pymongo
 
 from ..constants import *
@@ -16,4 +17,4 @@ products = client["track-trace"]["products"]
 class Tracing:
 
     def search(query):
-        return products.find( query )
+        return dumps(list(products.find( query )))
