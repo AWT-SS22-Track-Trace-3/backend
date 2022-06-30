@@ -213,9 +213,9 @@ POST:
 
 Response:
 ```
-{
+[
  MongoDB_result
-}
+]
 ```
 
 
