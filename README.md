@@ -47,16 +47,16 @@ POST (x-www-form-urlencoded):
 Response: 
 ```json
 {  
- access_token: str
- token_type: str
- access_lvl: int
+ "access_token": "str",
+ "token_type": "str",
+ "access_lvl": "int"
 }
 ```
 
 
 ### Incidents
 
-#### `/incident``
+#### `/incident`
 
 - enpoint to report an incident manually
 - access_lvl: all
@@ -64,34 +64,34 @@ Response:
 Header:
 ```json
 {
- access_token: str  
+ "access_token": "str"  
 }
 ```
 
 POST:
 ```json
 {
- type: str
- product: {
-    name: str
-    common_name: Any
-    form: str
-    strength: str
-    drug_code: Any
-    pack_size: int
-    pack_type: Any
-    serial_number: str
-    reimbursment_number: Any
-    containers: Any
-    batch_number: str
-    expiry_date: str
-    coding: Any
-    marketed_states: Any
-    manufacturer_name: Any
-    manufacturer_adress: Any
-    marketing_holder_name: Any
-    marketing_holder_adress: Any
-    wholesaler: Any
+ "type": "str",
+ "product": {
+    "name": "str",
+    "common_name": "Any",
+    "form": "str",
+    "strength": "str",
+    "drug_code": "Any",
+    "pack_size": "int",
+    "pack_type": "Any",
+    "serial_number": "str",
+    "reimbursment_number": "Any",
+    "containers": "Any",
+    "batch_number": "str",
+    "expiry_date": "str",
+    "coding": "Any",
+    "marketed_states": "Any",
+    "manufacturer_name": "Any",
+    "manufacturer_adress": "Any",
+    "marketing_holder_name": "Any",
+    "marketing_holder_adress": "Any",
+    "wholesaler": "Any"
  }
 }
 ```
@@ -99,12 +99,12 @@ POST:
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
 
-#### `/heatmap``
+#### `/heatmap`
 
 - returns data for incident heatmap for countries worldwide
 - access_lvl: 3 & 4
@@ -112,7 +112,7 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
@@ -124,7 +124,7 @@ GET:
 Response:
 ```json
 {
- heatmap_data: [ …, { "DE": int }, … ]
+ "heatmap_data": [ …, { "DE": "int" }, … ]
 }
 ```
 
@@ -139,21 +139,21 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 GET:
 ```json
 {
- username: str
+ "username": "str"
 }
 ```
 
 Response:
 ```json
 {
- is_username: bool
+ "is_username": "bool"
 }
 ```
 
@@ -166,33 +166,33 @@ Response:
 Header:
 ```json
 {
- access_token: str  
+ "access_token": "str"  
 }
 ```
 
 POST:
 ```json
 {
- username: str
- password: str
- company: str
- country: str
- address: str
- access_lvl: int
+ "username": "str",
+ "password": "str",
+ "company": "str",
+ "country": "str",
+ "address": "str",
+ "access_lvl": "int"
 }
 ```
 
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
 
 ### Tracing
 
-#### `/search``
+#### `/search`
 
 - returns results of POSTed search
 - access_lvl: 3 & 4
@@ -200,19 +200,19 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
-```json
+```
 {
  MongoDB_query
 }
 ```
 
 Response:
-```json
+```
 {
  MongoDB_result
 }
@@ -229,39 +229,39 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- name: str
- common_name: Any
- form: str
- strength: str
- drug_code: Any
- pack_size: int
- pack_type: Any
- serial_number: str
- reimbursment_number: Any
- containers: Any
- batch_number: str
- expiry_date: str
- coding: Any
- marketed_states: Any
- manufacturer_name: Any
- manufacturer_adress: Any
- marketing_holder_name: Any
- marketing_holder_adress: Any
- wholesaler: Any
+ "name": "str",
+ "common_name": "Any",
+ "form": "str",
+ "strength": "str",
+ "drug_code": "Any",
+ "pack_size": "int",
+ "pack_type": "Any",
+ "serial_number": "str",
+ "reimbursment_number": "Any",
+ "containers": "Any",
+ "batch_number": "str",
+ "expiry_date": "str",
+ "coding": "Any",
+ "marketed_states": "Any",
+ "manufacturer_name": "Any",
+ "manufacturer_adress": "Any",
+ "marketing_holder_name": "Any",
+ "marketing_holder_adress": "Any",
+ "wholesaler": "Any"
 }
 ```
 
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
@@ -274,27 +274,27 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
- transaction_date: str
- shipment_date: str
- owner: str
- owner_address: str
- f_owner: str
- f_owner_address: str
+ "serial_number": "str",
+ "transaction_date": "str",
+ "shipment_date": "str",
+ "owner": "str",
+ "owner_address": "str",
+ "f_owner": "str",
+ "f_owner_address": "str"
 }
 ```
 
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
@@ -307,27 +307,27 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
- transaction_date: str
- shipment_date: str
- prev_owner: str
- prev_owner_address: str
- owner: str
- owner_address: str
+ "serial_number": "str",
+ "transaction_date": "str",
+ "shipment_date": "str",
+ "prev_owner": "str",
+ "prev_owner_address": "str",
+ "owner": "str",
+ "owner_address": "str"
 }
 ```
 
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
@@ -340,21 +340,21 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
+ "serial_number": "str"
 }
 ```
 
 Response:
 ```json
 {
- acknowledged: bool
+ "acknowledged": "bool"
 }
 ```
 
@@ -368,24 +368,24 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 GET: 
 ```json
 {
- id: str
+ "id": "str"
 }
 ```
 
 Response:
 ```json
 {
- username: str
- password: str | None = None 
- company: str | None = None
- address: str | None = None
- access_lvl: int
+ "username": "str",
+ "password": "str | None = None",
+ "company": "str | None = None",
+ "address": "str | None = None",
+ "access_lvl": "int"
 }
 ```
