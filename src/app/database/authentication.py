@@ -2,16 +2,9 @@ from passlib.context import CryptContext
 import pymongo
 
 from ..constants import *
+from .init import client
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# pymongo connecting to mongoDB
-client = pymongo.MongoClient(
-    host=MONGO['DOCKER'],
-    port=MONGO['PORT'],
-    username=MONGO['USERNAME'],
-    password=MONGO['PASSWORD']
-)
 users = client["track-trace"]["users"]
 
 class Authentication:

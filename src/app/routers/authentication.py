@@ -7,6 +7,7 @@ from jose import JWTError, jwt
 from tokenize import Token
 
 from ..database.authentication import Authentication
+from ..database.models.models import User
 from ..constants import JWT
 
 
@@ -51,14 +52,6 @@ async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     if not user_info[0]:
         raise HTTPException(status_code=400, detail="Incorrect username or password!")
     return { "access_token": create_token({ "sub": form_data.username }), "token_type": "bearer", "access_lvl": user_info[1] }
-
-class User(BaseModel):
-    username: str
-    password: str | None = None 
-    company: str | None = None
-    country: str
-    address: str | None = None
-    access_lvl: int
 
 async def authenticate(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(

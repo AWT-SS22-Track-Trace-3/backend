@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from datetime import datetime
 
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
@@ -28,7 +29,9 @@ router = APIRouter(
 
 class ReportIncident(BaseModel):
     type: str
-    product: Product
+    description: str
+    product: str
+    chain_step: int
 
 @router.post("/incident")
 async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
@@ -36,7 +39,11 @@ async def incident(report_incident: ReportIncident, user: User = Depends(authent
     incident = {
         "type": report_incident["type"],
         "product": report_incident["product"],
-        "user": user
+        "chain_step": report_incident["chain_step"],
+        "reported": {
+            "timestamp": datetime.now(),
+            "user": user.username
+        }
     }
     acknowledged = Incidents.report(incident)
     return { "acknowledged": acknowledged }

@@ -1,3 +1,4 @@
+from datetime import datetime
 from pycountry import countries
 from pydantic import BaseModel
 from typing import Any
@@ -17,12 +18,17 @@ incidents = client["track-trace"]["incidents"]
 
 # this database persisist security incidents in the supply chain
 
-class Incidents:
+class Reporter(BaseModel):
+    user: str
+    timestamp: datetime
 
-    class Incident(BaseModel):
-        type: str
-        information: Any
-        user: User
+class Incident(BaseModel):
+    type: str
+    product: str
+    chain_step: int
+    reporter: Reporter
+
+class Incidents():
 
     def report(incident: Incident):
         return incidents.insert_one(incident).acknowledged
