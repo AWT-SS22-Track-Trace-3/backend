@@ -72,27 +72,7 @@ POST:
 ```json
 {
  "type": "str",
- "product": {
-    "name": "str",
-    "common_name": "Any",
-    "form": "str",
-    "strength": "str",
-    "drug_code": "Any",
-    "pack_size": "int",
-    "pack_type": "Any",
-    "serial_number": "str",
-    "reimbursment_number": "Any",
-    "containers": "Any",
-    "batch_number": "str",
-    "expiry_date": "str",
-    "coding": "Any",
-    "marketed_states": "Any",
-    "manufacturer_name": "Any",
-    "manufacturer_adress": "Any",
-    "marketing_holder_name": "Any",
-    "marketing_holder_adress": "Any",
-    "wholesaler": "Any"
- }
+ "serial_number": "str"
 }
 ```
 

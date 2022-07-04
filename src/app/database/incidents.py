@@ -21,7 +21,7 @@ class Incidents:
 
     class Incident(BaseModel):
         type: str
-        information: Any
+        serial_number: str
         user: User
 
     def report(incident: Incident):

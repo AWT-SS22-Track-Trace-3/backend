@@ -28,14 +28,14 @@ router = APIRouter(
 
 class ReportIncident(BaseModel):
     type: str
-    product: Product
+    serial_number: str
 
 @router.post("/incident")
 async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
     report_incident = report_incident.dict()
     incident = {
         "type": report_incident["type"],
-        "product": report_incident["product"],
+        "serial_number": report_incident["serial_number"],
         "user": user
     }
     acknowledged = Incidents.report(incident)
