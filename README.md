@@ -1,10 +1,24 @@
 # Track&Trace Backend
 
-Description...
+This system represents a PoC for end-to-end supply chain monitoring for pharmaceuticals. The implementation is guided by the US and EU regulations for pharmaceutical supply chain security.
 
 ## Startup
 
  `docker-compose up`
+
+
+## Database Setup
+
+The Docker setup will automatically create a `track-trace` database with `users`, `products`, and `incidents` collections in it.
+
+These collections will be filled with dummy-data by the `dbseed` service. You now can interact with our API on the admin level through the user `(username: admin, password: SuperSecret)`.
+
+*Note:* To reset the database (**this will delete all data**), remove the Docker volume `backend_mongodata`. As long as this volume is present, initialization scripts will have no impact.
+
+To force an image rebuild on docker compose, run:
+
+`docker compose up --build`
+
 
 ## API
 
@@ -16,7 +30,9 @@ Description...
 - 4: Admin, has admin access
 
 
-### `/token`
+### Authentication
+
+#### `/token`
 
 - generates session token
 
@@ -31,44 +47,71 @@ POST (x-www-form-urlencoded):
 Response: 
 ```json
 {  
- access_token: str
- token_type: str
- access_lvl: int
+ "access_token": "str",
+ "token_type": "str",
+ "access_lvl": "int"
 }
 ```
 
 
-### `test/{id}`
+### Incidents
 
-- testing endpoint, modify as you please
+#### `/incident`
+
+- enpoint to report an incident manually
+- access_lvl: all
 
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"  
 }
 ```
 
-GET: 
+POST:
 ```json
 {
- id: str
+ "type": "str",
+ "serial_number": "str"
 }
 ```
 
 Response:
 ```json
 {
- username: str
- password: str | None = None 
- company: str | None = None
- address: str | None = None
- access_lvl: int
+ "acknowledged": "bool"
 }
 ```
 
 
-### `/is_username/{username}`
+#### `/heatmap`
+
+- returns data for incident heatmap for countries worldwide
+- access_lvl: 3 & 4
+
+Header:
+```json
+{
+ "access_token": "str"
+}
+```
+
+GET: 
+```json
+{ }
+```
+
+Response:
+```json
+{
+ "heatmap_data": "[ …, { "DE": "int", "addresses": [ "str" ] }, … ]"
+}
+```
+
+
+### Login
+
+#### `/is_username/{username}`
 
 - checks if username exists
 - access_lvl: 3 & 4
@@ -76,21 +119,21 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 GET:
 ```json
 {
- username: str
+ "username": "str"
 }
 ```
 
 Response:
 ```json
 {
- is_username: bool
+ "is_username": "bool"
 }
 ```
 
@@ -103,30 +146,62 @@ Response:
 Header:
 ```json
 {
- access_token: str  
+ "access_token": "str"  
 }
 ```
 
 POST:
 ```json
 {
- username: str
- password: str
- company: str
- address: str
- access_lvl: int
+ "username": "str",
+ "password": "str",
+ "company": "str",
+ "country": "str",
+ "address": "str",
+ "access_lvl": "int"
 }
 ```
 
 Response:
 ```json
 {
- is_username: bool
+ "acknowledged": "bool"
 }
 ```
 
 
-### `/create`
+### Tracing
+
+#### `/search`
+
+- returns results of POSTed search
+- access_lvl: 3 & 4
+
+Header:
+```json
+{
+ "access_token": "str"
+}
+```
+
+POST:
+```
+{
+ MongoDB_query
+}
+```
+
+Response:
+```
+[
+ MongoDB_result
+]
+```
+
+
+### Tracking
+
+#### `/create`
 
 - inserts new product into database
 - access_lvl: 2 & 4
@@ -134,39 +209,44 @@ Response:
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- name: str
- common_name: Any
- form: str
- strength: str
- drug_code: Any
- pack_size: int
- pack_type: Any
- serial_number: str
- reimbursment_number: Any
- containers: Any
- batch_number: str
- expiry_date: str
- coding: Any
- marketed_states: Any
- manufacturer_name: Any
- manufacturer_adress: Any
- marketing_holder_name: Any
- marketing_holder_adress: Any
- wholesaler: Any
+ "name": "str",
+ "common_name": "Any",
+ "form": "str",
+ "strength": "str",
+ "drug_code": "Any",
+ "pack_size": "int",
+ "pack_type": "Any",
+ "serial_number": "str",
+ "reimbursment_number": "Any",
+ "containers": "Any",
+ "batch_number": "str",
+ "expiry_date": "str",
+ "coding": "Any",
+ "marketed_states": "Any",
+ "manufacturer_name": "Any",
+ "manufacturer_adress": "Any",
+ "marketing_holder_name": "Any",
+ "marketing_holder_adress": "Any",
+ "wholesaler": "Any"
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ "acknowledged": "bool"
+}
+```
 
 
-### `/checkout`
+#### `/checkout`
 
 - updates product history to "in transport to…"
 - access_lvl: 0, 2, & 4
@@ -174,27 +254,32 @@ Response: `None`
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
- transaction_date: str
- shipment_date: str
- owner: str
- owner_address: str
- f_owner: str
- f_owner_address: str
+ "serial_number": "str",
+ "transaction_date": "str",
+ "shipment_date": "str",
+ "owner": "str",
+ "owner_address": "str",
+ "f_owner": "str",
+ "f_owner_address": "str"
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ "acknowledged": "bool"
+}
+```
 
 
-### `/checkin`
+#### `/checkin`
 
 - updates product history to "arrived at…"
 - access_lvl: 0, 1, & 4
@@ -202,27 +287,32 @@ Response: `None`
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
- transaction_date: str
- shipment_date: str
- prev_owner: str
- prev_owner_address: str
- owner: str
- owner_address: str
+ "serial_number": "str",
+ "transaction_date": "str",
+ "shipment_date": "str",
+ "prev_owner": "str",
+ "prev_owner_address": "str",
+ "owner": "str",
+ "owner_address": "str"
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ "acknowledged": "bool"
+}
+```
 
 
-### `/terminate`
+#### `/terminate`
 
 - updates product history to "has been used"
 - access_lvl: 1 & 4
@@ -230,28 +320,52 @@ Response: `None`
 Header:
 ```json
 {
- access_token: str
+ "access_token": "str"
 }
 ```
 
 POST:
 ```json
 {
- serial_number: str
+ "serial_number": "str"
 }
 ```
 
-Response: `None`
+Response:
+```json
+{
+ "acknowledged": "bool"
+}
+```
 
 
-## Database Setup
+### Default
 
-The Docker setup will automatically create a `products` database with a `products` collection in it.
+#### `/test/{id}`
 
-For this collection, the user `(username: root, password: SuperSecret)` will be created and it will be filled with data by the `dbseed` service.
+- testing endpoint, modify as you please
 
-*Note:* To reset the database (**this will delete all data**), remove the Docker volume `backend_mongodata`. As long as this volume is present, initialization scripts will have no impact.
+Header:
+```json
+{
+ "access_token": "str"
+}
+```
 
-To force an image rebuild on docker compose, run:
+GET: 
+```json
+{
+ "id": "str"
+}
+```
 
-`docker compose up --build`
+Response:
+```json
+{
+ "username": "str",
+ "password": "str | None = None",
+ "company": "str | None = None",
+ "address": "str | None = None",
+ "access_lvl": "int"
+}
+```

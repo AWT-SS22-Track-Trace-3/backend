@@ -4,7 +4,6 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from datetime import datetime, timedelta
 from pydantic import BaseModel
 from jose import JWTError, jwt
-from typing import List, Any
 from tokenize import Token
 
 from ..database.authentication import Authentication
@@ -57,6 +56,7 @@ class User(BaseModel):
     username: str
     password: str | None = None 
     company: str | None = None
+    country: str
     address: str | None = None
     access_lvl: int
 

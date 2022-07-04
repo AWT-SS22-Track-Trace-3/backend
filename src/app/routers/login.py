@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
+from pycountry import countries
 from pydantic import BaseModel
-from typing import List, Any
 
 from ..database.authentication import Authentication
 from .authentication import User, authenticate
@@ -37,6 +37,7 @@ class New_User(BaseModel):
     username: str
     password: str
     company: str
+    country: str
     address: str
     access_lvl: int
 
@@ -44,6 +45,9 @@ class New_User(BaseModel):
 async def signup(new_user: New_User, user: User = Depends(authenticate)):
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
         raise HTTPException(status_code=403, detail="Insufficient authorization level!")
+
+    if countries.get(alpha_2=new_user.country) is None:
+        raise HTTPException(status_code=400, detail="Country does not exist!")
 
     if not Authentication.signup(new_user.dict()):
         raise HTTPException(status_code=406, detail="User already exists!")
