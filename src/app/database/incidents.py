@@ -6,27 +6,13 @@ import pymongo
 
 from ..routers.authentication import User
 from ..constants import *
+from .models.models import Incident
+from .init import client
 
 # pymongo connecting to mongoDB
-client = pymongo.MongoClient(
-    host=MONGO['DOCKER'],
-    port=MONGO['PORT'],
-    username=MONGO['USERNAME'],
-    password=MONGO['PASSWORD']
-)
 incidents = client["track-trace"]["incidents"]
 
 # this database persisist security incidents in the supply chain
-
-class Reporter(BaseModel):
-    user: str
-    timestamp: datetime
-
-class Incident(BaseModel):
-    type: str
-    product: str
-    chain_step: int
-    reporter: Reporter
 
 class Incidents():
 
@@ -44,4 +30,76 @@ class Incidents():
             } )
 
         return heatmap
-        
+    
+    def getIncidents(scope):
+        aggregation = [
+            {
+                '$match': { 
+                    "_id" : {
+                        "$exists": True
+                    }
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "products",
+                    "localField": "product",
+                    "foreignField": "serial_number",
+                    "as": "product_lookup"
+                }
+            },
+            {
+                "$unwind": "$product_lookup"
+            },
+            {
+                "$addFields": {
+                    "reported_at": {
+                        "$arrayElemAt": ["$product_lookup.supply_chain", 0]
+                    }
+                }
+            },
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "reported_at.owner",
+                    "foreignField": "username",
+                    "as": "assigned_company"
+                }
+            },
+            {
+                "$unwind": "$assigned_company"
+            }
+        ]
+
+        if scope == "country":
+            aggregation.append(
+                {
+                    "$group": {
+                        "_id": "$assigned_company.address.country",
+                        "count": {
+                            "$sum": 1
+                        }
+                    }
+                }
+            )
+        else:
+            aggregation = aggregation + [
+                    {
+                        "$match": {
+                            "assigned_company.address.country": scope
+                        }
+                    },
+                    {
+                        "$project": {
+                            "_id": 0,
+                            "product_lookup": 0,
+                            "reported_at": 0,
+                            "assigned_company._id": 0,
+                            "assigned_company.password": 0,
+                            "assigned_company.access_lvl": 0
+                        }
+                    }
+                ]
+            
+
+        return list(incidents.aggregate(aggregation))

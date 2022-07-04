@@ -4,7 +4,7 @@ from datetime import datetime
 
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
-from .track import Product
+from ..database.models.models import Incident
 
 
 
@@ -27,26 +27,27 @@ router = APIRouter(
 #    API-Report_Incidents
 #<------------------------>
 
-class ReportIncident(BaseModel):
-    type: str
-    description: str
-    product: str
-    chain_step: int
-
 @router.post("/incident")
-async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
+async def incident(report_incident: Incident, user: User = Depends(authenticate)):
     report_incident = report_incident.dict()
     incident = {
         "type": report_incident["type"],
+        "description": report_incident["description"],
         "product": report_incident["product"],
         "chain_step": report_incident["chain_step"],
         "reported": {
             "timestamp": datetime.now(),
-            "user": user.username
+            "user": user["username"]
         }
     }
     acknowledged = Incidents.report(incident)
     return { "acknowledged": acknowledged }
+
+@router.get("/incidents")
+async def getIncidents(scope: str = "country", user: User = Depends(authenticate)):
+    if user["access_lvl"] != 3 and user["access_lvl"] != 4:
+        raise HTTPException(status_code=400, detail="Insufficient authorization")
+    return Incidents.getIncidents(scope)
 
 @router.get("/heatmap")
 async def heatmap(user: User = Depends(authenticate)):

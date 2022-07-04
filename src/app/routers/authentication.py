@@ -7,7 +7,7 @@ from jose import JWTError, jwt
 from tokenize import Token
 
 from ..database.authentication import Authentication
-from ..database.models.models import User
+from ..database.models.models import User, TokenModel
 from ..constants import JWT
 
 
@@ -33,11 +33,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 #     Authentication
 #<------------------------>
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-    access_lvl: int
-
 def create_token(data: dict):
     to_encode = data.copy()
 
@@ -46,7 +41,7 @@ def create_token(data: dict):
 
     return jwt.encode(to_encode, JWT['SECRET_KEY'], algorithm=JWT['ALGORITHM'])
 
-@router.post("/token", response_model=Token)
+@router.post("/token", response_model=TokenModel)
 async def token(form_data: OAuth2PasswordRequestForm = Depends()):
     user_info = Authentication.is_user(form_data.username, form_data.password)
     if not user_info[0]:

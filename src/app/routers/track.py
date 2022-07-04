@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
-from typing import Any
 
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
 from ..database.tracking import Tracking
+from ..database.models.models import NewProduct, ProductCheckin, ProductCheckout
 
 
 
@@ -27,32 +27,11 @@ router = APIRouter(
 #    API-Track_Products
 #<------------------------>
 
-class Product(BaseModel):
-    name: str
-    common_name: Any
-    form: str
-    strength: str
-    drug_code: Any
-    pack_size: int
-    pack_type: Any
-    serial_number: str
-    reimbursment_number: Any
-    containers: Any
-    batch_number: str
-    expiry_date: str
-    coding: Any
-    marketed_states: Any
-    manufacturer_names: Any
-    manufacturer_adresses: Any
-    marketing_holder_name: Any
-    marketing_holder_adress: Any
-    wholesaler: Any
-
 @router.post("/create")
-async def create(product: Product, user: User = Depends(authenticate)):
+async def create(product: NewProduct, user: User = Depends(authenticate)):
     if user["access_lvl"] != 2 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.create_product(product.dict(), user["username"])
+    result = Tracking.create_product(product.dict(), user)
     if result is False:
         Incidents.report({
             "type": "create",
@@ -73,7 +52,7 @@ class CheckoutBody(BaseModel):
     f_owner_address: str
 
 @router.post("/checkout")
-async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
+async def checkout(body: ProductCheckout, user: User = Depends(authenticate)):
     if user["access_lvl"] != 0 and user["access_lvl"] != 2 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.checkout_product(body.dict())
@@ -97,7 +76,7 @@ class CheckinBody(BaseModel):
     owner_address: str
 
 @router.post("/checkin")
-async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
+async def checkin(body: ProductCheckin, user: User = Depends(authenticate)):
     if user["access_lvl"] != 0 and user["access_lvl"] != 1 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.checkin_product(body.dict(), user["username"])

@@ -40,3 +40,8 @@ async def search(query: Query, user: User = Depends(authenticate)):
 @router.get("/defined_search")
 async def defined_search(user: User = Depends(authenticate)):
     return { "result": "None" }
+
+@router.get("/product/{serial_number}")
+async def getProduct(serial_number, user: User = Depends(authenticate)):
+    result = Tracing.getProduct(serial_number)
+    return result

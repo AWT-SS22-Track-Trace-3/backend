@@ -2,16 +2,16 @@ version: "3.9"
 volumes:
   mongodata:
 services:
-  web:
-    build: src/
-    depends_on:
-      - mongo
-    container_name: backend
-    command: uvicorn --host 0.0.0.0 --reload app.main:app
-    volumes:
-      - ./src/app:/app
-    ports:
-      - "8000:8000"
+  #web:
+  #  build: src/
+  #  depends_on:
+  #    - mongo
+  #  container_name: backend
+  #  command: uvicorn --host 0.0.0.0 --reload app.main:app
+  #  volumes:
+  #    - ./src/app:/app
+  #  ports:
+  #    - "8000:8000"
   mongo:
     image: mongo
     container_name: backend-mongo
@@ -24,7 +24,7 @@ services:
       MONGO_INITDB_DATABASE: track-trace
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: SuperSecret
-  dbseed:
-    build: ./dbseed
-    depends_on:
-      - mongo
+  #dbseed:
+  #  build: ./dbseed
+  #  depends_on:
+  #    - mongo
