@@ -104,7 +104,7 @@ GET:
 Response:
 ```json
 {
- "heatmap_data": "[ …, { "DE": "int", "addresses": [ "str" ] }, … ]"
+ "heatmap_data": '[ …, { "DE": "int", "addresses": [ "str" ] }, … ]'
 }
 ```
 
