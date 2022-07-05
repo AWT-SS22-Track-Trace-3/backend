@@ -56,7 +56,7 @@ async def create(product: Product, user: User = Depends(authenticate)):
     if result is False:
         Incidents.report({
             "type": "create",
-            "information": product,
+            "serial_number": product.serial_number,
             "user": user
         })
         raise HTTPException(status_code=400, detail="Error in system, product already exists. Please contact authorities.")
@@ -79,8 +79,8 @@ async def checkout(body: CheckoutBody, user: User = Depends(authenticate)):
     result = Tracking.checkout_product(body.dict())
     if result is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
+            "type": "checkout",
+            "information": body.serial_number,
             "user": user
         })
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
@@ -103,8 +103,8 @@ async def checkin(body: CheckinBody, user: User = Depends(authenticate)):
     result = Tracking.checkin_product(body.dict(), user["username"])
     if result is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
+            "type": "checkin",
+            "information": body.serial_number,
             "user": user
         })
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
@@ -121,8 +121,8 @@ async def terminate(body: TerminateBody, user: User = Depends(authenticate)):
     result = Tracking.terminate_product(body.serial_number)
     if result is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
+            "type": "terminate",
+            "information": body.serial_number,
             "user": user
         })
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")

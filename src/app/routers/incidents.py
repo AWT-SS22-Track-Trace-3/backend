@@ -31,7 +31,7 @@ class ReportIncident(BaseModel):
     serial_number: str
 
 @router.post("/incident")
-async def incident(report_incident: ReportIncident, user: User = Depends(authenticate)):
+async def report(report_incident: ReportIncident, user: User = Depends(authenticate)):
     report_incident = report_incident.dict()
     incident = {
         "type": report_incident["type"],
