@@ -369,3 +369,16 @@ Response:
  "access_lvl": "int"
 }
 ```
+
+
+## Security
+
+Replace the `SECRET_KEY` in `src/constants.py` with your own, using the following command:
+
+`openssl rand -hex 32`
+
+Change the `password` property (and other properties if you want to) in `dbseed/init-admin.json`, by aquiring a new password using the following command:
+
+`from passlib.context import CryptContext`
+
+`CryptContext(schemes=["bcrypt"], deprecated="auto").hash("respective_password")`
