@@ -1,1 +1,102 @@
-[ { "incident": "initial" } ]
+[
+    {
+        "type": "theft",
+        "product": "4432889436610395",
+        "description": "Product not checked out and not in hospital inventory.",
+        "chain_step": 2,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "example",
+        "product": "4432889436610395",
+        "description": "Example to demonstrate heatmap",
+        "chain_step": 1,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "example",
+        "product": "5532889436610399",
+        "description": "Example to demonstrate heatmap",
+        "chain_step": 0,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "example",
+        "product": "5532889436610399",
+        "description": "Example to demonstrate heatmap",
+        "chain_step": 1,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 1,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 1,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 1,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 0,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 0,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    },
+    {
+        "type": "forgery",
+        "product": "9982722773858693",
+        "description": "Product checked in but not checked out.",
+        "chain_step": 0,
+        "reporter": {
+            "user": "admin",
+            "timestamp": "2022-07-05T00:09:00+01:00"
+        }
+    }
+]

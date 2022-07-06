@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from ..database.authentication import Authentication
 from .authentication import authenticate
-from ..database.models.models import User
+from ..database.models.models import User, NewUser
 
 
 
@@ -33,7 +33,7 @@ async def is_username(username: str, user: User = Depends(authenticate)):
     return Authentication.is_username(username)
 
 @router.post("/signup")
-async def signup(new_user: User, user: User = Depends(authenticate)):
+async def signup(new_user: NewUser, user: User = Depends(authenticate)):
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
         raise HTTPException(status_code=403, detail="Insufficient authorization level!")
 

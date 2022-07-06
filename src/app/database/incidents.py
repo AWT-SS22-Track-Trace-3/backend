@@ -8,6 +8,7 @@ from ..routers.authentication import User
 from ..constants import *
 from .models.models import Incident
 from .init import client
+from .tracking import Tracking
 
 # pymongo connecting to mongoDB
 incidents = client["track-trace"]["incidents"]
@@ -17,6 +18,8 @@ incidents = client["track-trace"]["incidents"]
 class Incidents():
 
     def report(incident: Incident):
+        Tracking.reportProduct(incident["product"])
+
         return incidents.insert_one(incident).acknowledged
 
     def heatmap_data():
@@ -45,16 +48,16 @@ class Incidents():
                     "from": "products",
                     "localField": "product",
                     "foreignField": "serial_number",
-                    "as": "product_lookup"
+                    "as": "product"
                 }
             },
             {
-                "$unwind": "$product_lookup"
+                "$unwind": "$product"
             },
             {
                 "$addFields": {
                     "reported_at": {
-                        "$arrayElemAt": ["$product_lookup.supply_chain", 0]
+                        "$arrayElemAt": ["$product.supply_chain", "$chain_step"]
                     }
                 }
             },
@@ -90,16 +93,28 @@ class Incidents():
                         }
                     },
                     {
+                        "$lookup": {
+                            "from": "users",
+                            "localField": "product.manufacturers",
+                            "foreignField": "username",
+                            "as": "product.manufacturers"
+                        }
+                    },
+                    {
                         "$project": {
                             "_id": 0,
-                            "product_lookup": 0,
                             "reported_at": 0,
+                            "product._id": 0,
+                            "product.manufacturers._id": 0,
+                            "product.manufacturers.password": 0,
+                            "product.manufacturers.access_lvl": 0,
                             "assigned_company._id": 0,
                             "assigned_company.password": 0,
                             "assigned_company.access_lvl": 0
                         }
                     }
                 ]
-            
+        
+        #print(list(incidents.aggregate(aggregation)))
 
         return list(incidents.aggregate(aggregation))

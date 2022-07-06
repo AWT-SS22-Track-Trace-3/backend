@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+import json
 
 from .authentication import User, authenticate
 from ..database.tracing import Tracing
@@ -32,7 +33,7 @@ class Query(BaseModel):
 async def search(query: Query, user: User = Depends(authenticate)):
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracing.search(query.dict())
+    result = Tracing.search(json.loads(query.query))
     if result is None:
         raise HTTPException(status_code=400, detail="No data returned by the database.")
     return result

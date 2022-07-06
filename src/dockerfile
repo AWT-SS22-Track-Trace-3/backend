@@ -1,9 +1,9 @@
 FROM python:slim
 
+ENV MODE=DOCKER
+
 COPY . .
 
 RUN pip install -r requirements.txt
-
-ENV mode=DOCKER
 
 CMD [ "uvicorn", "--host", "0.0.0.0", "app.main:app" ]

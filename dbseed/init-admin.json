@@ -4,7 +4,126 @@
         "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
         "company": "Host",
         "country": "DE",
-        "address": "Host Straße",
+        "address": {
+            "street": "Admin Street",
+            "number": "1",
+            "zip_code": "12345",
+            "city": "Berlin",
+            "country": "DE"
+        },
+        "type": "admin",
         "access_lvl": 4
+    },
+    {
+        "username": "sandoz_gmbh",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Sandoz GmbH",
+        "country": "AT",
+        "address": {
+            "street": "Biochemiestraße",
+            "number": "10",
+            "zip_code": "6250",
+            "city": "Kundl",
+            "country": "AT",
+            "format": "EU"
+        },
+        "type": "manufacturer",
+        "access_lvl": 2
+    },
+    {
+        "username": "chartwell_pharmaceuticals_llc",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Chartwell Pharmaceuticals, LLC.",
+        "country": "US",
+        "address": {
+            "street": "Brenner Dr",
+            "number": "77",
+            "zip_code": "10920-1307",
+            "city": "Congers, NY",
+            "country": "US",
+            "format": "US"
+        },
+        "type": "manufacturer",
+        "access_lvl": 2
+    },
+    {
+        "username": "fortissa_limited",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Fortissa Limited",
+        "country": "GB",
+        "address": {
+            "street": "Deansgate",
+            "number": "129",
+            "zip_code": "M3 3WR",
+            "city": "Manchester",
+            "country": "GB",
+            "format": "US"
+        },
+        "type": "wholesaler",
+        "access_lvl": 0
+    },
+    {
+        "username": "mckesson_corporation",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "McKesson Corporation",
+        "country": "US",
+        "address": {
+            "street": "State Hwy 161",
+            "number": "6555",
+            "zip_code": "75039",
+            "city": "Irving, TX",
+            "country": "US",
+            "format": "US"
+        },
+        "type": "wholesaler",
+        "access_lvl": 0
+    },
+    {
+        "username": "hopital_fondation_adolphe_de_rothschild",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Hopital Fondation Adolphe de Rothschild",
+        "country": "FR",
+        "address": {
+            "street": "Rue Manin",
+            "number": "29",
+            "zip_code": "75019",
+            "city": "Paris",
+            "country": "FR",
+            "format": "FR"
+        },
+        "type": "dispenser",
+        "access_lvl": 1
+    },
+    {
+        "username": "bayer_ag",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Bayer AG",
+        "country": "DE",
+        "address": {
+            "street": "Kaiser-Wilhelm-Allee",
+            "number": "1",
+            "zip_code": "51373",
+            "city": "Leverkusen",
+            "country": "DE",
+            "format": "EU"
+        },
+        "type": "manufacturer",
+        "access_lvl": 2
+    },
+    {
+        "username": "charite_nerlin",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Charite – Universitätsmedizin Berlin",
+        "country": "DE",
+        "address": {
+            "street": "Charitéplatz",
+            "number": "1",
+            "zip_code": "10117",
+            "city": "Berlin",
+            "country": "DE",
+            "format": "EU"
+        },
+        "type": "dispenser",
+        "access_lvl": 1
     }
 ]

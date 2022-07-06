@@ -32,12 +32,21 @@ class TokenModel(BaseModel):
     token_type: str
     access_lvl: int
 
+class NewUser(BaseModel):
+    username: str
+    password: str
+    company: str
+    country: str
+    address: _Address
+    type: str
+
 class User(BaseModel):
     username: str
     password: str
     company: str
     country: str
     address: _Address
+    type: str
     access_lvl: int
 
 class Incident(BaseModel):
@@ -65,6 +74,7 @@ class Product(BaseModel):
     manufacturers: List[str]
     sellers: List[str]
     supply_chain: List[_SupplyChainItem]
+    reported: bool
     manufacturer_names: str = None
     manufacturer_adresses: str = None
     marketing_holder_name: str = None
@@ -105,3 +115,17 @@ class NewProduct(BaseModel):
     marketing_holder_name: str = None
     marketing_holder_adress: str = None
     wholesaler: str = None
+
+# 0 Wholesaler, can checkin, checkout, and view associated products
+# 1 Consumer, can checkin, terminate, and view associated products
+# 2 Manufacturer, can create, checkout, and view associated products
+# 3 Authorities, can signup users and view everything
+# 4 Admin, has admin access
+
+class AccessLevels:
+    wholesaler: 0
+    repackager: 0
+    dispenser: 1
+    manufacturer: 2
+    authority: 3
+    admin: 4

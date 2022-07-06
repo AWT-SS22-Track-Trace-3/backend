@@ -327,18 +327,6 @@
                             "type": "document",
                             "properties": [
                                 {
-                                    "name": "id",
-                                    "hackoladeMeta": {},
-                                    "isActivated": true,
-                                    "type": "numeric",
-                                    "GUID": "4ce211f0-fb12-11ec-b3d0-8db21a4b916c",
-                                    "required": true,
-                                    "error": {},
-                                    "childRelationships": [
-                                        "825849d0-fb12-11ec-b3d0-8db21a4b916c"
-                                    ]
-                                },
-                                {
                                     "name": "transaction_date",
                                     "hackoladeMeta": {},
                                     "isActivated": true,
@@ -360,7 +348,7 @@
                                     "error": {}
                                 },
                                 {
-                                    "name": "target_owner",
+                                    "name": "owner",
                                     "hackoladeMeta": {},
                                     "isActivated": true,
                                     "type": "objectId",
@@ -372,6 +360,14 @@
                                     ],
                                     "relationshipType": "Foreign Key",
                                     "parentRelationship": "2407b230-fb12-11ec-b3d0-8db21a4b916c",
+                                    "error": {}
+                                },
+                                {
+                                    "name": "checked_out",
+                                    "hackoladeMeta": {},
+                                    "isActivated": true,
+                                    "type": "boolean",
+                                    "GUID": "43dff130-fba8-11ec-97ec-3dcb714e7acc",
                                     "error": {}
                                 }
                             ],
@@ -450,15 +446,6 @@
                     "isActivated": true,
                     "type": "numeric",
                     "GUID": "25e4f320-fb11-11ec-b3d0-8db21a4b916c",
-                    "foreignCollection": "410b17d0-fb0f-11ec-b3d0-8db21a4b916c",
-                    "foreignField": [
-                        "410b17d0-fb0f-11ec-b3d0-8db21a4b916c",
-                        "bdeca0a0-fb11-11ec-b3d0-8db21a4b916c",
-                        "c285fee0-fb11-11ec-b3d0-8db21a4b916c",
-                        "4ce211f0-fb12-11ec-b3d0-8db21a4b916c"
-                    ],
-                    "relationshipType": "Foreign Key",
-                    "parentRelationship": "825849d0-fb12-11ec-b3d0-8db21a4b916c",
                     "error": {}
                 },
                 {
@@ -601,29 +588,6 @@
             "GUID": "309cac80-fb12-11ec-b3d0-8db21a4b916c",
             "parentCollection": "3bd3cbe0-fb0f-11ec-b3d0-8db21a4b916c",
             "childCollection": "410b17d0-fb0f-11ec-b3d0-8db21a4b916c"
-        },
-        {
-            "name": "fk products. to incidents.",
-            "relationshipType": "Foreign Key",
-            "parentField": [
-                [
-                    "410b17d0-fb0f-11ec-b3d0-8db21a4b916c",
-                    "bdeca0a0-fb11-11ec-b3d0-8db21a4b916c",
-                    "c285fee0-fb11-11ec-b3d0-8db21a4b916c",
-                    "4ce211f0-fb12-11ec-b3d0-8db21a4b916c"
-                ]
-            ],
-            "parentCardinality": "1",
-            "childField": [
-                [
-                    "4d63cc70-fb0f-11ec-b3d0-8db21a4b916c",
-                    "25e4f320-fb11-11ec-b3d0-8db21a4b916c"
-                ]
-            ],
-            "childCardinality": "1",
-            "GUID": "825849d0-fb12-11ec-b3d0-8db21a4b916c",
-            "parentCollection": "410b17d0-fb0f-11ec-b3d0-8db21a4b916c",
-            "childCollection": "4d63cc70-fb0f-11ec-b3d0-8db21a4b916c"
         }
     ],
     "users": [],
@@ -669,13 +633,12 @@
         "bdeca0a0-fb11-11ec-b3d0-8db21a4b916c": "supply_chain",
         "d681cf50-fb11-11ec-b3d0-8db21a4b916c": "transaction_date",
         "dd7aef80-fb11-11ec-b3d0-8db21a4b916c": "shipment_date",
-        "ddb31680-fb11-11ec-b3d0-8db21a4b916c": "target_owner",
+        "ddb31680-fb11-11ec-b3d0-8db21a4b916c": "owner",
         "0a73b120-fb12-11ec-b3d0-8db21a4b916c": "_id",
         "2407b230-fb12-11ec-b3d0-8db21a4b916c": "fk users. to products.",
         "2e02c7c0-fb12-11ec-b3d0-8db21a4b916c": "fk users. to products.",
         "309cac80-fb12-11ec-b3d0-8db21a4b916c": "fk users. to products.",
-        "4ce211f0-fb12-11ec-b3d0-8db21a4b916c": "id",
-        "825849d0-fb12-11ec-b3d0-8db21a4b916c": "fk products. to incidents."
+        "43dff130-fba8-11ec-97ec-3dcb714e7acc": "checked_out"
     },
     "definitions": {
         "type": "definitions",
@@ -700,7 +663,7 @@
     "creationTS": "2022-07-03T20:31:50.348Z",
     "GUID": "2ad758c0-fb0f-11ec-b3d0-8db21a4b916c",
     "isLineageEnabled": false,
-    "lastModifTS": "2022-07-03T22:29:27.220Z",
+    "lastModifTS": "2022-07-04T22:58:32.958Z",
     "persistenceSchemaVersion": "6",
     "isCreatedByPlugin": true,
     "pluginInformation": {
@@ -709,30 +672,31 @@
     "applicationInformation": {
         "version": "6.2.1"
     },
+    "hackoladeMeta": {},
     "settings": {
         "centralPane": {
             "dbLevel": {
                 "erd": [
                     {
                         "GUID": "3bd3cbe0-fb0f-11ec-b3d0-8db21a4b916c",
-                        "x": 157,
-                        "y": 461,
+                        "x": 867,
+                        "y": 294,
                         "width": 215,
                         "height": 249,
                         "color": {}
                     },
                     {
                         "GUID": "410b17d0-fb0f-11ec-b3d0-8db21a4b916c",
-                        "x": 546,
-                        "y": 423,
-                        "width": 290,
+                        "x": 1256,
+                        "y": 256,
+                        "width": 266,
                         "height": 465,
                         "color": {}
                     },
                     {
                         "GUID": "4d63cc70-fb0f-11ec-b3d0-8db21a4b916c",
-                        "x": 140,
-                        "y": 737,
+                        "x": 850,
+                        "y": 570,
                         "width": 191,
                         "height": 123,
                         "color": {}
@@ -740,8 +704,8 @@
                 ],
                 "buckets": [
                     {
-                        "x": 100,
-                        "y": 383,
+                        "x": 810,
+                        "y": 216,
                         "GUID": "34db6f00-fb0f-11ec-b3d0-8db21a4b916c"
                     }
                 ],

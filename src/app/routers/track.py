@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
+from datetime import datetime
 
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
@@ -34,9 +35,14 @@ async def create(product: NewProduct, user: User = Depends(authenticate)):
     result = Tracking.create_product(product.dict(), user)
     if result is False:
         Incidents.report({
-            "type": "create",
-            "information": product,
-            "user": user
+            "type": "invalid_create",
+            "product": product["product"],
+            "description": "Error inserting new product.",
+            "chain_step": 0,
+            "reporter": {
+                "user": user["username"],
+                "timestamp": datetime.now()
+            }
         })
         raise HTTPException(status_code=400, detail="Error in system, product already exists. Please contact authorities.")
 
@@ -55,16 +61,21 @@ class CheckoutBody(BaseModel):
 async def checkout(body: ProductCheckout, user: User = Depends(authenticate)):
     if user["access_lvl"] != 0 and user["access_lvl"] != 2 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    result = Tracking.checkout_product(body.dict())
-    if result is False:
+    result = Tracking.checkout_product(body.dict(), user["username"])
+    if result["result"] is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
-            "user": user
+            "type": "invalid_checkout",
+            "product": body["product"],
+            "description": "Error checking out product.",
+            "chain_step": result["chain_step"],
+            "reporter": {
+                "user": user["username"],
+                "timestamp": datetime.now()
+            }
         })
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return { "acknowledged": result }
+    return { "acknowledged": result["result"] }
 
 class CheckinBody(BaseModel):
     serial_number: str
@@ -80,15 +91,20 @@ async def checkin(body: ProductCheckin, user: User = Depends(authenticate)):
     if user["access_lvl"] != 0 and user["access_lvl"] != 1 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
     result = Tracking.checkin_product(body.dict(), user["username"])
-    if result is False:
+    if result["result"] is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
-            "user": user
+            "type": "invalid_checkin",
+            "product": body["product"],
+            "description": "Error checking in product.",
+            "chain_step": result["chain_step"],
+            "reporter": {
+                "user": user["username"],
+                "timestamp": datetime.now()
+            }
         })
         raise HTTPException(status_code=400, detail="Error in system, please contact authorities.")
 
-    return { "acknowledged": result }
+    return { "acknowledged": result["result"] }
 
 class TerminateBody(BaseModel):
     serial_number: str
