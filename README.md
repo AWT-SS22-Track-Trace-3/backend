@@ -30,6 +30,13 @@ To force an image rebuild on docker compose, run:
 - 4: Admin, has admin access
 
 
+### Documentation
+
+#### `/docs`
+
+- GETs interactive documentation web page
+
+
 ### Authentication
 
 #### `/token`
