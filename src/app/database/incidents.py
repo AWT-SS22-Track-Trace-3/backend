@@ -9,6 +9,8 @@ from ..constants import *
 from .models.models import Incident
 from .init import client
 from .tracking import Tracking
+from ..helpers.incident_grouping import IncidentGrouping
+from ..helpers.pagination import Pagination
 
 # pymongo connecting to mongoDB
 incidents = client["track-trace"]["incidents"]
@@ -34,7 +36,7 @@ class Incidents():
 
         return heatmap
     
-    def getIncidents(scope):
+    def getIncidents(scope, group, sort, pagination: Pagination = None):
         aggregation = [
             {
                 '$match': { 
@@ -102,7 +104,6 @@ class Incidents():
                     },
                     {
                         "$project": {
-                            "_id": 0,
                             "reported_at": 0,
                             "product._id": 0,
                             "product.manufacturers._id": 0,
@@ -115,6 +116,18 @@ class Incidents():
                     }
                 ]
         
-        #print(list(incidents.aggregate(aggregation)))
+        if(group is not None and scope != "country"):
+            grouping = IncidentGrouping(group, sort)
 
-        return list(incidents.aggregate(aggregation))
+            aggregation = aggregation + grouping.getQuery()
+
+        if pagination is not None:
+            aggregation = aggregation + pagination.getQuery()
+        
+        print(aggregation)
+        print(list(incidents.aggregate(aggregation)))
+
+        #return list(incidents.aggregate(aggregation))
+    
+    def getGroupedIncidents(scope, group, sort, pagination = None):
+        pass

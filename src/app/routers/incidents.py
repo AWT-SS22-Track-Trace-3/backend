@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
 from ..database.models.models import Incident
+from ..helpers.pagination import Pagination
 
 
 
@@ -43,11 +45,36 @@ async def incident(report_incident: Incident, user: User = Depends(authenticate)
     acknowledged = Incidents.report(incident)
     return { "acknowledged": acknowledged }
 
-@router.get("/incidents")
-async def getIncidents(scope: str = "country", user: User = Depends(authenticate)):
+@router.get("/incidents/summary")
+async def getIncidentSummary(
+    scope: str = "country", 
+    group: Optional[str] = None, 
+    sort: Optional[str] = "asc", 
+    limit: Optional[int] = None,
+    offset: Optional[int] = None,
+    user: User = Depends(authenticate)):
+
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
         raise HTTPException(status_code=400, detail="Insufficient authorization")
-    return Incidents.getIncidents(scope)
+    
+    pagination = None
+    if limit is not None and offset is not None:
+        pagination = Pagination(limit, offset)
+
+    return Incidents.getIncidents(scope, group, sort, pagination)
+
+# Get all incidents for a specific group key (like month 7) and country but enable pass-around values:
+# Get all incidents for one country with group = None, Get all incidents with country = None and group = None etc.
+@router.get("/incidents")
+async def getIncidents(
+    country: str,
+    group: str,
+    value: Optional[str],
+    limit: Optional[int] = None,
+    offset: Optional[int] = None,
+    user: User = Depends(authenticate)
+):
+    pass
 
 @router.get("/heatmap")
 async def heatmap(user: User = Depends(authenticate)):
