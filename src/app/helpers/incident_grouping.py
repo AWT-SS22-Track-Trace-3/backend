@@ -5,8 +5,30 @@ class SortingOperands:
     company_name = "assigned_company.name"
     incident_type = "type"
 
+    default_order = [date, company_name, product_name, incident_type, serial_number]
+
+    def __init__(self, mode):
+        self.mode = mode
+
+    def get_pre(self, primary):
+        result = [primary]
+
+        for item in self.default_order:
+            if item != primary:
+                result.append(item)
+        
+        return result
+
 class DateGroupingOperands:
     day = {
+        "year":
+        {
+            "$year": {
+                "$dateFromString": {
+                    "dateString": "$reporter.timestamp"
+                }
+            }
+        },
         "day":
         {
             "$dayOfYear": {
@@ -14,7 +36,10 @@ class DateGroupingOperands:
                     "dateString": "$reporter.timestamp"
                 }
             },
-        },
+        }
+        
+    }
+    month = {
         "year":
         {
             "$year": {
@@ -22,9 +47,7 @@ class DateGroupingOperands:
                     "dateString": "$reporter.timestamp"
                 }
             }
-        }
-    }
-    month = {
+        },
         "month":
         {
             "$month": {
@@ -32,15 +55,8 @@ class DateGroupingOperands:
                     "dateString": "$reporter.timestamp"
                 }
             },
-        },
-        "year":
-        {
-            "$year": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            }
         }
+        
     }
     year = {
         "year":
@@ -66,30 +82,31 @@ class GroupingOperands:
     company_name = "$assigned_company.company"
     incident_type = "$type"
 
+    def __init__(self, mode):
+        self.mode = mode
+
+    def get(self):
+        return getattr(self, self.mode)
+    
+    def get_post_sort(self, order):
+        result = {}
+
+        if type(self.get()) is DateGroupingOperands:
+            for key in self.get().get().keys():
+                result["_id." + key] = order
+        else:
+            result["_id." + self.mode] = order
+        
+        return result
+
 class IncidentGrouping:
     def __init__(self, group: str = "day", sort: str = "dsc"):
-        self.grouping_operands = GroupingOperands()
-        self.sorting_operands = SortingOperands()
+        self.grouping_operands = GroupingOperands(group)
+        self.sorting_operands = SortingOperands(sort)
 
         self.group_string = group
         self.group_operand = getattr(self.grouping_operands, group)
         self.sort = sort
-        self.defaultSortingOrder = [
-            getattr(self.sorting_operands, "date"),
-            getattr(self.sorting_operands, "company_name"), 
-            getattr(self.sorting_operands, "product_name"), 
-            getattr(self.sorting_operands, "incident_type"),
-            getattr(self.sorting_operands, "serial_number")
-            ]
-    
-    def getSortingOrder(self, primary):
-        result = [primary]
-
-        for item in self.defaultSortingOrder:
-            if item != primary:
-                result.append(item)
-        
-        return result
     
     def getSortingObject(self):
         primary=""
@@ -100,7 +117,7 @@ class IncidentGrouping:
         else:
             primary = getattr(self.sorting_operands, self.group_string)
 
-        sortingOrder = self.getSortingOrder(primary)
+        sortingOrder = self.sorting_operands.get_pre(primary)
 
         for item in sortingOrder:
             if self.sort == "asc":
@@ -116,7 +133,9 @@ class IncidentGrouping:
         if type(self.group_operand) is DateGroupingOperands:
             grouping_object["_id"] = self.group_operand.get()
         else:
-            grouping_object["_id"] = self.group_operand
+            grouping_object["_id"] = { 
+                self.group_string: self.group_operand
+            }
         
         grouping_object["incidents"] = {
             "$addToSet": "$$ROOT"
@@ -134,6 +153,9 @@ class IncidentGrouping:
             },
             {
                 "$group": group
+            },
+            {
+                "$sort": self.grouping_operands.get_post_sort(1 if self.sort == "asc" else -1)
             },
             {
                 "$project": {

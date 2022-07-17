@@ -1,3 +1,4 @@
+from optparse import Option
 from fastapi import APIRouter, HTTPException, Depends
 from pydantic import BaseModel
 from datetime import datetime
@@ -45,10 +46,10 @@ async def incident(report_incident: Incident, user: User = Depends(authenticate)
     acknowledged = Incidents.report(incident)
     return { "acknowledged": acknowledged }
 
-@router.get("/incidents/summary")
+@router.get("/incidents/{country}/summary")
 async def getIncidentSummary(
-    scope: str = "country", 
-    group: Optional[str] = None, 
+    country: str = "all", 
+    group: Optional[str] = "day", 
     sort: Optional[str] = "asc", 
     limit: Optional[int] = None,
     offset: Optional[int] = None,
@@ -61,13 +62,13 @@ async def getIncidentSummary(
     if limit is not None and offset is not None:
         pagination = Pagination(limit, offset)
 
-    return Incidents.getIncidents(scope, group, sort, pagination)
+    return Incidents.getIncidents(country, group, sort, pagination)
 
 # Get all incidents for a specific group key (like month 7) and country but enable pass-around values:
 # Get all incidents for one country with group = None, Get all incidents with country = None and group = None etc.
-@router.get("/incidents")
+@router.get("/incidents/{country}")
 async def getIncidents(
-    country: str,
+    country: Optional[str],
     group: str,
     value: Optional[str],
     limit: Optional[int] = None,

@@ -36,7 +36,7 @@ class Incidents():
 
         return heatmap
     
-    def getIncidents(scope, group, sort, pagination: Pagination = None):
+    def getIncidents(country, group, sort, pagination: Pagination = None):
         aggregation = [
             {
                 '$match': { 
@@ -76,7 +76,7 @@ class Incidents():
             }
         ]
 
-        if scope == "country":
+        if country == "all":
             aggregation.append(
                 {
                     "$group": {
@@ -91,7 +91,7 @@ class Incidents():
             aggregation = aggregation + [
                     {
                         "$match": {
-                            "assigned_company.address.country": scope
+                            "assigned_company.address.country": country
                         }
                     },
                     {
@@ -116,7 +116,7 @@ class Incidents():
                     }
                 ]
         
-        if(group is not None and scope != "country"):
+        if(group is not None and country != "all"):
             grouping = IncidentGrouping(group, sort)
 
             aggregation = aggregation + grouping.getQuery()
@@ -125,9 +125,9 @@ class Incidents():
             aggregation = aggregation + pagination.getQuery()
         
         print(aggregation)
-        print(list(incidents.aggregate(aggregation)))
+        #print(list(incidents.aggregate(aggregation)))
 
-        #return list(incidents.aggregate(aggregation))
+        return list(incidents.aggregate(aggregation))
     
     def getGroupedIncidents(scope, group, sort, pagination = None):
         pass
