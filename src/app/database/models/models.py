@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import (datetime, date)
-from typing import (Any, List)
+from typing import (Any, List, Optional)
+
 
 class _Address(BaseModel):
     street: str
@@ -9,9 +10,11 @@ class _Address(BaseModel):
     city: str
     country: str
 
+
 class _Reporter(BaseModel):
     user: str
     timestamp: datetime
+
 
 class _SupplyChainItem(BaseModel):
     transaction_date: date
@@ -22,15 +25,24 @@ class _SupplyChainItem(BaseModel):
     checked_out: bool
     checked_in: bool
 
+
 class _Supplier(BaseModel):
     transaction_date: str
     shipment_date: str
     owner: str
 
+
+class IncidentFilter(BaseModel):
+    filter_type: str
+    filter_value: str | datetime
+    interval: Optional[str] = None
+
+
 class TokenModel(BaseModel):
     access_token: str
     token_type: str
     access_lvl: int
+
 
 class NewUser(BaseModel):
     username: str
@@ -39,6 +51,7 @@ class NewUser(BaseModel):
     country: str
     address: _Address
     type: str
+
 
 class User(BaseModel):
     username: str
@@ -49,12 +62,14 @@ class User(BaseModel):
     type: str
     access_lvl: int
 
+
 class Incident(BaseModel):
     type: str
     product: str
     description: str
     chain_step: int
     reporter: _Reporter = None
+
 
 class Product(BaseModel):
     name: str
@@ -81,16 +96,19 @@ class Product(BaseModel):
     marketing_holder_adress: str = None
     wholesaler: str = None
 
+
 class ProductCheckin(BaseModel):
     product: str
     transaction_date: str
     shipment_date: str
+
 
 class ProductCheckout(BaseModel):
     product: str
     future_owner: str
     transaction_date: str
     shipment_date: str
+
 
 class NewProduct(BaseModel):
     name: str
@@ -121,6 +139,7 @@ class NewProduct(BaseModel):
 # 2 Manufacturer, can create, checkout, and view associated products
 # 3 Authorities, can signup users and view everything
 # 4 Admin, has admin access
+
 
 class AccessLevels:
     wholesaler: 0

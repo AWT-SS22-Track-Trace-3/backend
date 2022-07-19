@@ -6,7 +6,9 @@
         "chain_step": 2,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-05T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-05T00:00:00Z"
+            }
         }
     },
     {
@@ -16,7 +18,9 @@
         "chain_step": 1,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-05T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-05T00:00:01Z"
+            }
         }
     },
     {
@@ -26,7 +30,9 @@
         "chain_step": 0,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-05T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-05T23:59:59Z"
+            }
         }
     },
     {
@@ -36,7 +42,9 @@
         "chain_step": 1,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-06T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-06T00:00:00Z"
+            }
         }
     },
     {
@@ -46,7 +54,9 @@
         "chain_step": 1,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-06T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-06T00:09:00Z"
+            }
         }
     },
     {
@@ -56,7 +66,9 @@
         "chain_step": 1,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-08T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-08T00:09:00Z"
+            }
         }
     },
     {
@@ -66,7 +78,9 @@
         "chain_step": 1,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-08T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-08T00:09:00Z"
+            }
         }
     },
     {
@@ -76,7 +90,9 @@
         "chain_step": 0,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-08T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-08T00:09:00Z"
+            }
         }
     },
     {
@@ -86,7 +102,9 @@
         "chain_step": 0,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-09T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-09T00:09:00Z"
+            }
         }
     },
     {
@@ -96,7 +114,9 @@
         "chain_step": 0,
         "reporter": {
             "user": "admin",
-            "timestamp": "2022-07-11T00:09:00Z"
+            "timestamp": {
+                "$date": "2022-07-11T00:09:00Z"
+            }
         }
     }
 ]
