@@ -48,7 +48,8 @@ class IncidentAggregator:
         return {
             "reporter.timestamp": order,
             "assigned_company.username": order,
-            "incident_type": order
+            "product.name": order,
+            "type": order
         }
 
     def _standardProjectionSet(self):
@@ -94,6 +95,12 @@ class IncidentAggregator:
         self._prepareCustomPostMatch(self._matchCountry(country))
         self.builder.addSort(self._sortByTime(-1)).addBinaryProjection(
             self._standardProjectionSet(), 0)
+
+        return self.builder.build()
+
+    def getCountrySummary(self, country, groupQuery):
+        self._prepareCustomPostMatch(self._matchCountry(country))
+        self.builder.addSort(self._sortByTime()).add(groupQuery)
 
         return self.builder.build()
 

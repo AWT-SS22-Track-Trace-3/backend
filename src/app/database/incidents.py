@@ -125,54 +125,77 @@ class Incidents():
             ]
 
         if(country != "all"):
-            aggregation = aggregator.getByCountry(country)
+            #aggregation = aggregator.getByCountry(country)
 
-            grouping = IncidentGrouping(group, sort)
+            grouping = IncidentGrouping(group, sort, True)
 
-            aggregation = aggregation + grouping.getQuery()
+            #aggregation = aggregation + grouping.getQuery()
+            aggregation = aggregator.getCountrySummary(
+                country, grouping.getQuery())
+
         else:
             aggregation = aggregator.getCountryIncidences()
 
         if pagination is not None:
             aggregation = aggregation + pagination.getQuery()
 
-        print(aggregation)
+        # print(aggregation)
         # print(list(incidents.aggregate(aggregation)))
+        result = list(incidents.aggregate(aggregation))
 
-        return list(incidents.aggregate(aggregation))
+        #print(group, result)
 
-    def getIncidents(country, filter, pagination: Pagination = None):
+        if group == "day" and country != "all":
+            for item in result:
+                date = datetime(item["_id"]["year"], 1, 1) + \
+                    relativedelta(days=+item["_id"]["day"] - 1)
+                item["_id"]["formatted"] = date.strftime("%d.%m.%Y")
+                item["_id"]["raw"] = date.isoformat() + "Z"
+        elif group == "month" and country != "all":
+            for item in result:
+                date = datetime(item["_id"]["year"], 1, 1) + \
+                    relativedelta(months=+item["_id"]["month"] - 1)
+                item["_id"]["formatted"] = date.strftime("%b %Y")
+                item["_id"]["raw"] = date.isoformat() + "Z"
+
+        return result
+
+    def getIncidents(country, filter_type, filter_value, pagination: Pagination = None):
         aggregator = IncidentAggregator("incidents", "products", "users")
 
-        if filter is not None:
-            filter_type = FilterTypes[filter["filter_type"]].value
+        if filter_type is not None and filter_value is not None:
+            filter_type = FilterTypes[filter_type].value
         else:
             filter_type = "all"
 
-        if filter_type == FilterTypes.date.value:
-            interval = filter["interval"]
-            start_date = parser.parse(filter["filter_value"], ignoretz=True)
-            end_date = parser.parse(filter["filter_value"], ignoretz=True)
+        if filter_type == FilterTypes.day.value:
+            start_date = parser.parse(filter_value)
+            end_date = start_date + relativedelta(days=+1)
 
-            if interval == "day":
-                end_date += relativedelta(days=+1)
-            elif interval == "month":
-                end_date += relativedelta(months=+1)
-            elif interval == "year":
-                end_date += relativedelta(years=+1)
-            else:
-                return None
+            aggregation = aggregator.getByCountryAndTimerange(
+                country, start_date, end_date)
+
+        elif filter_type == FilterTypes.day.value:
+            start_date = parser.parse(filter_value)
+            end_date = start_date + relativedelta(months=+1)
+
+            aggregation = aggregator.getByCountryAndTimerange(
+                country, start_date, end_date)
+
+        elif filter_type == FilterTypes.day.value:
+            start_date = parser.parse(filter_value)
+            end_date = start_date + relativedelta(years=+1)
 
             aggregation = aggregator.getByCountryAndTimerange(
                 country, start_date, end_date)
 
         elif filter_type == FilterTypes.incident_type.value:
             aggregation = aggregator.getByCountryAndType(
-                country, filter["filter_value"])
+                country, filter_value)
 
         elif filter_type == FilterTypes.company_name.value:
             aggregation = aggregator.getByCountryAndCompany(
-                country, filter["filter_value"])
+                country, filter_value)
         else:
             aggregation = aggregator.getByCountry(country)
 
@@ -186,6 +209,8 @@ class Incidents():
 
 
 class FilterTypes(Enum):
-    date = "date"
+    day = "day"
+    month = "month"
+    year = "year"
     incident_type = "incident_type"
     company_name = "name"

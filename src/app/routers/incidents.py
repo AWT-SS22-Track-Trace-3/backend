@@ -70,7 +70,8 @@ async def getIncidentSummary(
 
 @router.get("/incidents/{country}")
 async def getIncidents(
-    filter: IncidentFilter = None,
+    filter_type: str = None,
+    filter_value: str = None,
     country: Optional[str] = "all",
     limit: Optional[int] = None,
     offset: Optional[int] = None,
@@ -84,10 +85,7 @@ async def getIncidents(
     if limit is not None and offset is not None:
         pagination = Pagination(limit, offset)
 
-    if filter is not None:
-        filter = filter.dict()
-
-    return Incidents.getIncidents(country, filter, pagination)
+    return Incidents.getIncidents(country, filter_type, filter_value, pagination)
 
 
 @router.get("/heatmap")

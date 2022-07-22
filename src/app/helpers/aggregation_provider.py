@@ -69,10 +69,22 @@ class AggregationPipelineBuilder:
 
         return self
 
+    def addProjection(self, projection):
+        self.pipeline.append({
+            "$project": projection
+        })
+
+        return self
+
     def addSort(self, sort):
         self.pipeline.append({
             "$sort": sort
         })
+
+        return self
+
+    def add(self, arr: list):
+        self.pipeline = self.pipeline + arr
 
         return self
 

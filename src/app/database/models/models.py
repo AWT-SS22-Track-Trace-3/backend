@@ -17,6 +17,7 @@ class _Reporter(BaseModel):
 
 
 class _SupplyChainItem(BaseModel):
+    type: str
     transaction_date: date
     date_shipped: date
     date_received: date
@@ -27,9 +28,15 @@ class _SupplyChainItem(BaseModel):
 
 
 class _Supplier(BaseModel):
-    transaction_date: str
-    shipment_date: str
+    transaction_date: str | datetime
     owner: str
+
+
+class _ShipmentModel(BaseModel):
+    date: str | datetime
+    shipment_method: str
+    tracking_number: str
+    handler: str
 
 
 class IncidentFilter(BaseModel):
@@ -98,16 +105,14 @@ class Product(BaseModel):
 
 
 class ProductCheckin(BaseModel):
-    product: str
-    transaction_date: str
-    shipment_date: str
+    transaction_date: str | datetime
+    shipment_date: str | datetime
 
 
 class ProductCheckout(BaseModel):
-    product: str
     future_owner: str
     transaction_date: str
-    shipment_date: str
+    shipment: _ShipmentModel
 
 
 class NewProduct(BaseModel):
@@ -144,6 +149,7 @@ class NewProduct(BaseModel):
 class AccessLevels:
     wholesaler: 0
     repackager: 0
+    postal_service: 0
     dispenser: 1
     manufacturer: 2
     authority: 3

@@ -111,7 +111,7 @@
         "access_lvl": 2
     },
     {
-        "username": "charite_nerlin",
+        "username": "charite_berlin",
         "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
         "company": "Charite – Universitätsmedizin Berlin",
         "country": "DE",
@@ -125,5 +125,21 @@
         },
         "type": "dispenser",
         "access_lvl": 1
+    },
+    {
+        "username": "deutsche_post_ag",
+        "password": "$2b$12$eqc6X3z2mvXtEoWhFTMpSupUoQ.Gm9MU2zOZUAzvjVwzjIbSuHEuu",
+        "company": "Deutsche Post AG",
+        "country": "DE",
+        "address": {
+            "street": "Charles-de-Gaulle-Straße",
+            "number": "20",
+            "zip_code": "53113",
+            "city": "Bonn",
+            "country": "DE",
+            "format": "EU"
+        },
+        "type": "postal_service",
+        "access_lvl": 0
     }
 ]

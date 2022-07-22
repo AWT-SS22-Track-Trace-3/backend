@@ -5,7 +5,8 @@ class SortingOperands:
     company_name = "assigned_company.name"
     incident_type = "type"
 
-    default_order = [date, company_name, product_name, incident_type, serial_number]
+    default_order = [date, company_name,
+                     product_name, incident_type, serial_number]
 
     def __init__(self, mode):
         self.mode = mode
@@ -16,56 +17,37 @@ class SortingOperands:
         for item in self.default_order:
             if item != primary:
                 result.append(item)
-        
+
         return result
+
 
 class DateGroupingOperands:
     day = {
         "year":
         {
-            "$year": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            }
+            "$year": "$reporter.timestamp"
         },
         "day":
         {
-            "$dayOfYear": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            },
+            "$dayOfYear": "$reporter.timestamp"
         }
-        
+
     }
     month = {
         "year":
         {
-            "$year": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            }
+            "$year": "$reporter.timestamp"
         },
         "month":
         {
-            "$month": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            },
+            "$month": "$reporter.timestamp"
         }
-        
+
     }
     year = {
         "year":
         {
-            "$year": {
-                "$dateFromString": {
-                    "dateString": "$reporter.timestamp"
-                }
-            }
+            "$year": "$reporter.timestamp"
         }
     }
 
@@ -74,6 +56,7 @@ class DateGroupingOperands:
 
     def get(self):
         return getattr(self, self.mode)
+
 
 class GroupingOperands:
     day = DateGroupingOperands("day")
@@ -87,7 +70,7 @@ class GroupingOperands:
 
     def get(self):
         return getattr(self, self.mode)
-    
+
     def get_post_sort(self, order):
         result = {}
 
@@ -96,20 +79,22 @@ class GroupingOperands:
                 result["_id." + key] = order
         else:
             result["_id." + self.mode] = order
-        
+
         return result
 
+
 class IncidentGrouping:
-    def __init__(self, group: str = "day", sort: str = "dsc"):
+    def __init__(self, group: str = "day", sort: str = "dsc", summary_only: bool = False):
         self.grouping_operands = GroupingOperands(group)
         self.sorting_operands = SortingOperands(sort)
 
         self.group_string = group
         self.group_operand = getattr(self.grouping_operands, group)
         self.sort = sort
-    
+        self.summary_only = summary_only
+
     def getSortingObject(self):
-        primary=""
+        primary = ""
         sorting_object = {}
 
         if type(self.group_operand) is DateGroupingOperands:
@@ -133,16 +118,21 @@ class IncidentGrouping:
         if type(self.group_operand) is DateGroupingOperands:
             grouping_object["_id"] = self.group_operand.get()
         else:
-            grouping_object["_id"] = { 
+            grouping_object["_id"] = {
                 self.group_string: self.group_operand
             }
-        
-        grouping_object["incidents"] = {
-            "$addToSet": "$$ROOT"
+
+        if not self.summary_only:
+            grouping_object["incidents"] = {
+                "$addToSet": "$$ROOT"
+            }
+
+        grouping_object["count"] = {
+            "$sum": 1
         }
 
         return grouping_object
-    
+
     def getQuery(self):
         group = self.getGroupingObject()
         sort = self.getSortingObject()
