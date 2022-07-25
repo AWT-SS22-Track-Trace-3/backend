@@ -153,16 +153,33 @@ class Tracking:
             }
         }).acknowledged}
 
-    def terminate_product(serial_number):
+    def terminate_product(serial_number, username):
         document = {"serial_number": serial_number}
-        projection = {"used": 1, "history": 1}
+        projection = {"used": 1, "supply_chain": 1}
 
         result = products.find_one(document, projection)
 
-        if result is not None and not result["used"] and result["history"][0]["checkin"]:
-            return products.update_one(document, {"$set": {"used": True}}).acknowledged
+        if result is None \
+            or result["used"] \
+                or not result["supply_chain"][-1]["checked_in"] \
+                or result["supply_chain"][-1]["checked_out"]:
 
-        return False
+            return False
+
+        updated_supply_chain = result["supply_chain"]
+        termination_date = datetime.utcnow()
+
+        updated_supply_chain[-1]["checked_out"] = True
+        updated_supply_chain[-1]["checkout_date"] = termination_date
+
+        updated_supply_chain.append({
+            "id": len(updated_supply_chain) - 1,
+            "type": "termination",
+            "transaction_date": termination_date,
+            "owner": username
+        })
+
+        return products.update_one(document, {"$set": {"used": True, "supply_chain": updated_supply_chain}}).acknowledged
 
     def reportProduct(serial_number):
         products.update_one(

@@ -111,7 +111,7 @@ class ProductCheckin(BaseModel):
 
 class ProductCheckout(BaseModel):
     future_owner: str
-    transaction_date: str
+    transaction_date: str | datetime
     shipment: _ShipmentModel
 
 

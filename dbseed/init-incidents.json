@@ -24,26 +24,14 @@
         }
     },
     {
-        "type": "example",
-        "product": "5532889436610399",
-        "description": "Example to demonstrate heatmap",
-        "chain_step": 0,
+        "type": "inconsistency",
+        "product": "6457893284230987435",
+        "description": "3 of 10 containers missing.",
+        "chain_step": 3,
         "reporter": {
-            "user": "admin",
+            "user": "charite_berlin",
             "timestamp": {
-                "$date": "2022-07-05T23:59:59Z"
-            }
-        }
-    },
-    {
-        "type": "example",
-        "product": "5532889436610399",
-        "description": "Example to demonstrate heatmap",
-        "chain_step": 1,
-        "reporter": {
-            "user": "admin",
-            "timestamp": {
-                "$date": "2022-07-06T00:00:00Z"
+                "$date": "2022-06-23T11:21:00Z"
             }
         }
     },

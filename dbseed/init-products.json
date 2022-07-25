@@ -178,6 +178,114 @@
         "expiry_date": "31.07.2023",
         "coding": "",
         "marketed_region": "EU",
+        "reported": false,
+        "used": true,
+        "manufacturers": [
+            "bayer_ag"
+        ],
+        "sellers": [],
+        "supply_chain": [
+            {
+                "id": 0,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-11T12:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "owner": "bayer_ag",
+                "future_owner": "fortissa_limited",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 1,
+                "shipment_method": "air",
+                "tracking_number": "5347829374293462783472",
+                "date_shipped": {
+                    "$date": "2022-06-11T18:00:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-13T09:38:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 2,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-20T14:56:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-14T08:23:00Z"
+                },
+                "owner": "fortissa_limited",
+                "future_owner": "charite_berlin",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 3,
+                "shipment_method": "sea",
+                "tracking_number": "74659283420398463756348",
+                "date_shipped": {
+                    "$date": "2022-06-20T16:32:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-23T09:46:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 4,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-18T00:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-23T10:46:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-25T22:13:00Z"
+                },
+                "owner": "charite_berlin",
+                "future_owner": "",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 5,
+                "type": "termination",
+                "transaction_date": {
+                    "$date": "2022-06-25T22:13:00Z"
+                },
+                "owner": "charite_berlin"
+            }
+        ]
+    },
+    {
+        "name": "Bayer Test Product 2",
+        "common_name": "",
+        "form": "tablet",
+        "strength": "10 mg",
+        "drug_code": "67545456",
+        "pack_size": 100,
+        "pack_type": "",
+        "serial_number": "6457893284230987435",
+        "reimbursement_number": "",
+        "batch_number": "4358748",
+        "expiry_date": "31.07.2023",
+        "coding": "",
+        "marketed_region": "EU",
         "reported": true,
         "used": false,
         "manufacturers": [
@@ -187,39 +295,63 @@
         "supply_chain": [
             {
                 "id": 0,
-                "transaction_date": "2022-06-09",
-                "date_received": "2022-06-09",
-                "date_shipped": "2022-06-11",
-                "checkout_date": "2022-06-11",
-                "checkin_date": "2022-06-09",
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-11T12:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
                 "owner": "bayer_ag",
                 "future_owner": "fortissa_limited",
                 "checked_out": true,
                 "checked_in": true
             },
             {
+                "type": "shipment",
                 "id": 1,
-                "transaction_date": "2022-06-11",
-                "date_shipped": "2022-07-03",
-                "date_received": "2022-06-22",
-                "checkout_date": "2022-07-03",
-                "checkin_date": "2022-06-11",
+                "shipment_method": "air",
+                "tracking_number": "5347829374293462783472",
+                "date_shipped": {
+                    "$date": "2022-06-11T18:00:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-13T09:38:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 2,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-20T14:56:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-14T08:23:00Z"
+                },
                 "owner": "fortissa_limited",
                 "future_owner": "charite_berlin",
                 "checked_out": true,
                 "checked_in": true
             },
             {
-                "id": 2,
-                "transaction_date": "2022-07-03",
-                "date_shipped": "",
-                "checkout_date": "",
-                "checkin_date": "2022-07-03",
-                "date_received": "2022-07-05",
-                "owner": "charite_berlin",
-                "future_owner": "",
-                "checked_out": false,
-                "checked_in": true
+                "type": "shipment",
+                "id": 3,
+                "shipment_method": "sea",
+                "tracking_number": "74659283420398463756348",
+                "date_shipped": {
+                    "$date": "2022-06-20T16:32:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-23T09:46:00Z"
+                },
+                "owner": "deutsche_post_ag"
             }
         ]
     }
