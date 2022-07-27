@@ -31,9 +31,8 @@ class Query(BaseModel):
 
 @router.post("/search")
 async def search(query: Query, user: User = Depends(authenticate)):
-
-    if user["access_lvl"] == AccessLevels.admin or user["access_lvl"] == AccessLevels.authority:
-        result = Tracing.search(json.loads(query.query))
+    if user["access_lvl"] == AccessLevels.admin.value or user["access_lvl"] == AccessLevels.authority.value:
+        result = Tracing.search(query.query)
     else:
         result = Tracing.defined_search(query.query, user["username"])
 

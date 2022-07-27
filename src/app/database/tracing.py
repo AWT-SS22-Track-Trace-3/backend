@@ -15,6 +15,7 @@ products = client["track-trace"]["products"]
 class Tracing:
 
     def search(query):
+        print(query)
         aggregation = [
             {
                 "$match": query
@@ -68,7 +69,7 @@ class Tracing:
     def getProduct(serial_number):
         aggregator = ProductAggregator()
 
-        aggregation = (aggregator.getFullProduct())
+        aggregation = (aggregator.getProductBySerial(serial_number))
 
         result = list(products.aggregate(aggregation))
 

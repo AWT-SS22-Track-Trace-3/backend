@@ -148,10 +148,10 @@ class NewProduct(BaseModel):
 
 
 class AccessLevels(Enum):
-    wholesaler = 0
-    repackager = 0
-    postal_service = 0
-    dispenser = 1
-    manufacturer = 2
-    authority = 3
+    wholesaler = 0,
+    repackager = 0,
+    postal_service = 0,
+    dispenser = 1,
+    manufacturer = 2,
+    authority = 3,
     admin = 4
