@@ -57,7 +57,7 @@ class Tracing:
 
         result = list(products.aggregate(aggregation))
 
-        print(aggregation, result)
+        # print(aggregation, result)
 
         if len(result) == 1:
             return Tracing._mergeSupplyChain(result[0])
@@ -66,12 +66,8 @@ class Tracing:
         elif len(result) < 1:
             return []
 
-        # print(list(products.aggregate(aggregation)))
-
-        # return list(products.aggregate(aggregation))[0]
-
     def _mergeSupplyChain(product):
-        if len(product["incidents"]) > 0 and hasattr(product["incidents"][0], "type"):
+        if len(product["incidents"]) > 0 and "type" in product["incidents"][0]:
             for incident in product["incidents"]:
                 for index, item in enumerate(product["supply_chain"]):
                     print(index, item)

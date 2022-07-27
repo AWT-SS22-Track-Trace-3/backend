@@ -55,6 +55,9 @@ class SupplyChainValidator:
             self.append_message("Product checked in before transaction date.")
 
     def validate_checkout(self):
+        # product not checked in
+        # checkout date before transaction date
+
         pass
 
     def validate_termination(self):
