@@ -1,3 +1,4 @@
+from enum import Enum
 from pydantic import BaseModel
 from datetime import (datetime, date)
 from typing import (Any, List, Optional)
@@ -146,11 +147,11 @@ class NewProduct(BaseModel):
 # 4 Admin, has admin access
 
 
-class AccessLevels:
-    wholesaler: 0
-    repackager: 0
-    postal_service: 0
-    dispenser: 1
-    manufacturer: 2
-    authority: 3
-    admin: 4
+class AccessLevels(Enum):
+    wholesaler = 0
+    repackager = 0
+    postal_service = 0
+    dispenser = 1
+    manufacturer = 2
+    authority = 3
+    admin = 4

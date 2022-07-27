@@ -50,8 +50,23 @@ class Tracing:
 
         return list(products.aggregate(aggregation))
 
+    def defined_search(query, username):
+        aggregator = ProductAggregator()
+
+        aggregation = aggregator.getProductBySearchRestricted(query, username)
+
+        result = list(products.aggregate(aggregation))
+
+        if len(result) == 0:
+            return []
+        else:
+            for product in result:
+                product = Tracing._reverseCutSupplyChain(product, username)
+
+        return result
+
     def getProduct(serial_number):
-        aggregator = ProductAggregator(serial_number)
+        aggregator = ProductAggregator()
 
         aggregation = (aggregator.getFullProduct())
 
@@ -77,4 +92,13 @@ class Tracing:
                         incident_item["type"] = "incident"
                         product["supply_chain"].insert(
                             index + 1, incident_item)
+        return product
+
+    def _reverseCutSupplyChain(product, username):
+        while product["supply_chain"]:
+            if product["supply_chain"][-1]["owner"]["username"] == username:
+                break
+            else:
+                product["supply_chain"].pop()
+
         return product

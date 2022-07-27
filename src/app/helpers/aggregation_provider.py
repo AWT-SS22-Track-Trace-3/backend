@@ -1,12 +1,13 @@
 class AggregationPipelineBuilder:
     pipeline = []
 
-    def init(self, match):
+    def init(self, match=None):
         self.pipeline = []
 
-        self.pipeline.append({
-            "$match": match
-        })
+        if not match is None:
+            self.pipeline.append({
+                "$match": match
+            })
 
         return self
 
@@ -79,6 +80,13 @@ class AggregationPipelineBuilder:
     def addSort(self, sort):
         self.pipeline.append({
             "$sort": sort
+        })
+
+        return self
+
+    def addUnwind(self, unwind: str | dict):
+        self.pipeline.append({
+            "$unwind": unwind
         })
 
         return self

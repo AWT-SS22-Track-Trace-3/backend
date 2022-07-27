@@ -1,22 +1,48 @@
+from app.helpers.aggregation_provider import AggregationPipelineBuilder
+
+
 class ProductAggregator:
 
-    def __init__(self, serial_number, incidents_coll="incidents", products_coll="products", users_coll="users"):
+    def __init__(self, incidents_coll="incidents", products_coll="products", users_coll="users"):
         self.incidents_coll = incidents_coll
         self.products_coll = products_coll
         self.users_coll = users_coll
 
-        self.pipeline = []
-        self.serial_number = serial_number
+        self.builder = None
 
-    def getFullProduct(self):
-        self.pipeline += [
+    def _serialMatch(self, number):
+        return {
+            "serial_number": number
+        }
+
+    def _companyMatch(self, company):
+        return {
+            "$expr": {
+                "$or": [
+                    {
+                        "$in": [
+                            company, "$manufacturers"
+                        ]
+                    },
+                    {
+                        "$in": [
+                            company, "$sellers"
+                        ]
+                    },
+                    {
+                        "$in": [
+                            company, "$supply_chain.owner"
+                        ]
+                    }
+                ]
+            }
+        }
+
+    def _addBaseLookup(self):
+        self.builder.add([
             {
-                '$match': {
-                    'serial_number': self.serial_number
-                }
-            }, {
                 '$lookup': {
-                    'from': 'users',
+                    'from': self.users_coll,
                     'localField': 'manufacturers',
                     'foreignField': 'username',
                     'as': 'manufacturers'
@@ -127,6 +153,19 @@ class ProductAggregator:
                     'sellers.access_lvl': 0,
                 }
             }
-        ]
+        ])
 
-        return self.pipeline
+    def getProductBySerial(self, serial_number):
+        self.builder = AggregationPipelineBuilder().init(self._serialMatch(serial_number))
+        self._addBaseLookup()
+
+        return self.builder.build()
+
+    def getProductBySearchRestricted(self, query, company):
+        match = self._companyMatch(company) | query
+
+        self.builder = AggregationPipelineBuilder().init(match)
+        self._addBaseLookup()
+        self.builder.addProjection({"incidents": 0})
+
+        return self.builder.build()
