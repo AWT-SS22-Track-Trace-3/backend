@@ -1,4 +1,4 @@
-from app.helpers.aggregation_provider import AggregationPipelineBuilder
+from app.helpers.aggregationProvider import AggregationPipelineBuilder
 
 
 class ProductAggregator:

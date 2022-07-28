@@ -1,19 +1,15 @@
-from datetime import datetime
-from inspect import formatannotationrelativeto
 from pycountry import countries
-from pydantic import BaseModel
-from typing import Any
 from dateutil import parser
 from dateutil.relativedelta import *
-import pymongo
 from enum import Enum
 
-from ..routers.authentication import User
+from app.helpers.incidentGrouper import IncidentGrouper
+
 from ..constants import *
-from .models.models import Incident, IncidentFilter
+from .models.models import Incident
 from .init import client
 from .tracking import Tracking
-from ..helpers.incident_grouping import IncidentGrouping
+from app.helpers.group_definitions import FormattingTypes, SortingOrder, group_def
 from ..helpers.pagination import Pagination
 from ..helpers.incidentAggregation import IncidentAggregator
 
@@ -44,94 +40,15 @@ class Incidents():
 
     def getGroupedIncidents(country, group, sort, pagination: Pagination = None):
         aggregator = IncidentAggregator("incidents", "products", "users")
-
-        aggregation = [
-            {
-                '$match': {
-                    "_id": {
-                        "$exists": True
-                    }
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "products",
-                    "localField": "product",
-                    "foreignField": "serial_number",
-                    "as": "product"
-                }
-            },
-            {
-                "$unwind": "$product"
-            },
-            {
-                "$addFields": {
-                    "reported_at": {
-                        "$arrayElemAt": ["$product.supply_chain", "$chain_step"]
-                    }
-                }
-            },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "reported_at.owner",
-                    "foreignField": "username",
-                    "as": "assigned_company"
-                }
-            },
-            {
-                "$unwind": "$assigned_company"
-            }
-        ]
-
-        if country == "all":
-            aggregation.append(
-                {
-                    "$group": {
-                        "_id": "$assigned_company.address.country",
-                        "count": {
-                            "$sum": 1
-                        }
-                    }
-                }
-            )
-        else:
-            aggregation = aggregation + [
-                {
-                    "$match": {
-                        "assigned_company.address.country": country
-                    }
-                },
-                {
-                    "$lookup": {
-                        "from": "users",
-                        "localField": "product.manufacturers",
-                        "foreignField": "username",
-                        "as": "product.manufacturers"
-                    }
-                },
-                {
-                    "$project": {
-                        "reported_at": 0,
-                        "product._id": 0,
-                        "product.manufacturers._id": 0,
-                        "product.manufacturers.password": 0,
-                        "product.manufacturers.access_lvl": 0,
-                        "assigned_company._id": 0,
-                        "assigned_company.password": 0,
-                        "assigned_company.access_lvl": 0
-                    }
-                }
-            ]
+        group_definition = None
 
         if(country != "all"):
-            #aggregation = aggregator.getByCountry(country)
 
-            grouping = IncidentGrouping(group, sort, True)
+            group_definition = group_def[group]
+            group_query = IncidentGrouper(group_definition)
 
-            #aggregation = aggregation + grouping.getQuery()
             aggregation = aggregator.getCountrySummary(
-                country, grouping.getQuery())
+                country, group_query.get_grouping_query(SortingOrder[sort].value))
 
         else:
             aggregation = aggregator.getCountryIncidences()
@@ -140,23 +57,19 @@ class Incidents():
             aggregation = aggregation + pagination.getQuery()
 
         # print(aggregation)
+
         # print(list(incidents.aggregate(aggregation)))
         result = list(incidents.aggregate(aggregation))
 
-        #print(group, result)
+        if group_definition["formatting"]["type"] == FormattingTypes.post_aggregation:
+            return Incidents._formatResult(result, group_definition["formatting"])
 
-        if group == "day" and country != "all":
-            for item in result:
-                date = datetime(item["_id"]["year"], 1, 1) + \
-                    relativedelta(days=+item["_id"]["day"] - 1)
-                item["_id"]["formatted"] = date.strftime("%d.%m.%Y")
-                item["_id"]["raw"] = date.isoformat() + "Z"
-        elif group == "month" and country != "all":
-            for item in result:
-                date = datetime(item["_id"]["year"], 1, 1) + \
-                    relativedelta(months=+item["_id"]["month"] - 1)
-                item["_id"]["formatted"] = date.strftime("%b %Y")
-                item["_id"]["raw"] = date.isoformat() + "Z"
+        return result
+
+    def _formatResult(result, definition):
+       # print(definition)
+        for item in result:
+            item = definition["fn"](item, definition["format"])
 
         return result
 

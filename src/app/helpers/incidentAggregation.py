@@ -1,7 +1,7 @@
 from typing import Optional
 from bson import ObjectId
 from datetime import datetime, timedelta
-from .aggregation_provider import AggregationPipelineBuilder
+from .aggregationProvider import AggregationPipelineBuilder
 
 
 class IncidentAggregator:

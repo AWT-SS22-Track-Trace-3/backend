@@ -155,3 +155,18 @@ class AccessLevels(Enum):
     manufacturer = 2,
     authority = 3,
     admin = 4
+
+
+# Group Types that are associated to times/dates have index numbers < 10
+class GroupTypes(Enum):
+    day = 0,
+    month = 1,
+    year = 2,
+    company_name = 10,
+    incident_type = 11
+
+    def from_string(self, type: str):
+        return self[type] if self[type] else 0
+
+    def is_date_type(self):
+        return self.value < 10
