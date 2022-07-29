@@ -34,6 +34,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 class Token(BaseModel):
     access_token: str
+    refresh_token: str
     token_type: str
     access_lvl: int
 
@@ -115,4 +116,4 @@ async def authenticate_refresh(token: str = Depends(oauth2_scheme)):
 
 @router.get("/refresh", response_model=Token)
 async def refresh(user: User = Depends(authenticate_refresh)):
-    return { "access_token": create_token({ "sub": user.username }), "token_type": "bearer", "access_lvl": user.access_lvl }
+    return { "access_token": create_token({ "sub": user["username"] }), "token_type": "bearer", "access_lvl": user["access_lvl"] }
