@@ -1,94 +1,201 @@
+from itertools import chain
 import pymongo
 import time
+from fastapi import HTTPException
+from datetime import datetime
+from dateutil.parser import isoparse
 
 from ..constants import *
+from .init import client
 
 # pymongo connecting to mongoDB
-client = pymongo.MongoClient(
-    host=MONGO['DOCKER'],
-    port=MONGO['PORT'],
-    username=MONGO['USERNAME'],
-    password=MONGO['PASSWORD']
-)
+
 products = client["track-trace"]["products"]
+
 
 class Tracking:
 
-    def create_product(product, owner):
-        document = { "product.serial_number": product["serial_number"] }
+    def create_product(product, user):
+        document = {"serial_number": product["serial_number"]}
 
-        if products.find_one( document ) is None:
+        if user["access_lvl"] > 3:
+            owner = product["supplier"]["owner"]
+        else:
+            owner = user["username"]
+
+        if products.find_one(document) is None:
             entry = {
                 "used": False,
-                "history": [
+                "reported": False,
+                "supply_chain": [
                     {
-                        "timestamp_checkin": time.time(),
-                        "checkin": True
+                        "id": 0,
+                        "type": "change_of_ownership",
+                        "transaction_date": isoparse(product["supplier"]["transaction_date"]).date(),
+                        "checkin_date": isoparse(product["supplier"]["transaction_date"]),
+                        "checked_out": False,
+                        "checked_in": True,
+                        "owner": owner,
+                        "future_owner": ""
                     }
-                ],
-                "owner": [ owner ],
-                "product": product
+                ]
             }
+
+            for key, val in product.items():
+                if key != "supplier" and key != "supply_chain":
+                    entry[key] = val
+
             return products.insert_one(entry).acknowledged
 
         return False
 
-    def checkout_product(product):
-        document = { "product.serial_number": product["serial_number"] }
-        projection = { "used": 1, "history": 1 }
+    def checkout_product(serial_number, product, username):
+        target_product = products.find_one({
+            "serial_number": serial_number
+        })
 
-        result = products.find_one( document, projection )
+        next_index = len(target_product["supply_chain"])
 
-        if result is not None and not result["used"] and result["history"][0]["checkin"]:
-            update_history = {
-                                "$push": {
-                                    "history": {
-                                        "$each": [
-                                            {
-                                                "timestamp_checkout": time.time(),
-                                                "owner": product["owner"],
-                                                "future_owner": product["f_owner"],
-                                                "timestamp_checkin": None,
-                                                "checkin": False
-                                            }
-                                        ],
-                                        "$position": 0
-                                    }
-                                }
-                            }
-
-            return products.update_one( document, update_history ).acknowledged
-
-        return False
-
-    def checkin_product(product, owner):
-        document = { "product.serial_number": product["serial_number"] }
-        projection = { "used": 1, "history": 1 }
-
-        result = products.find_one( document, projection )
-
-        if result is not None and not result["used"] and not result["history"][0]["checkin"]:
-            update_history = {
-                "$set": {
-                    "history.0.timestamp_checkin": time.time(),
-                    "history.0.checkin": True
-                },
-                "$push": {
-                    "owner": owner
-                }
+        validate = Tracking.validateProduct(target_product)
+        if not validate:
+            return {
+                "result": validate,
+                "chain_step": next_index - 1
             }
-            
-            return products.update_one( document, update_history ).acknowledged
 
-        return False
+        print(target_product)
 
-    def terminate_product(serial_number):
-        document = { "product.serial_number": serial_number }
-        projection = { "used": 1, "history": 1 }
+        for item in target_product["supply_chain"]:
+            if item.get("owner") == username:
+                if not item.get("checked_in"):
+                    #raise HTTPException(status_code=400, detail="Product was not previously checked out.")
+                    return {
+                        "result": validate,
+                        "chain_step": next_index - 1
+                    }
 
-        result = products.find_one( document, projection )
+        new_supply_chain: list = target_product["supply_chain"]
 
-        if result is not None and not result["used"] and result["history"][0]["checkin"]:
-            return products.update_one( document, { "$set": { "used": True } } ).acknowledged
+        for chain_step in new_supply_chain:
+            if not chain_step.get("checked_out") and chain_step.get("checked_in") and chain_step.get("owner") == username:
+                chain_step["checked_out"] = True
+                chain_step["checkout_date"] = datetime.utcnow()
+                chain_step["future_owner"] = product["future_owner"]
 
-        return False
+        new_supply_chain += [
+            {
+                "id": next_index,
+                "type": "shipment",
+                "shipment_method": product["shipment"]["shipment_method"],
+                "tracking_number": product["shipment"]["tracking_number"],
+                "date_shipped": isoparse(product["shipment"]["date"]),
+                "owner": product["shipment"]["handler"]
+            },
+            {
+                "id": next_index + 1,
+                "type": "change_of_ownership",
+                "transaction_date": isoparse(product["transaction_date"]).date(),
+                "owner": product["future_owner"],
+                "checked_in": False,
+                "checked_out": False
+            }
+        ]
+
+        # print(new_supply_chain)
+
+        return {"result": products.update_one({"serial_number": serial_number}, {
+            "$set": {
+                "supply_chain": new_supply_chain
+            }
+        }).acknowledged}
+
+    def checkin_product(serial_number, product, username):
+        target_product = products.find_one({
+            "serial_number": serial_number
+        })
+
+        next_index = len(target_product["supply_chain"])
+
+        validate = Tracking.validateProduct(target_product)
+        if not validate:
+            return {
+                "result": validate,
+                "chain_step": next_index - 1
+            }
+
+        for item in target_product["supply_chain"]:
+            if item.get("future_owner") == username:
+                if not item.get("checked_out"):
+                    #raise HTTPException(status_code=400, detail="Product was not previously checked out.")
+                    return {
+                        "result": False,
+                        "chain_step": next_index - 1
+                    }
+
+        updated_supply_chain = target_product["supply_chain"]
+
+        for item in updated_supply_chain:
+            if (item["type"] == "change_of_ownership"
+                and not item.get("checked_in")
+                and not item.get("checked_out")
+                    and item.get("owner") == username
+                    and item.get("transaction_date").date() == isoparse(product["transaction_date"]).date()):
+
+                item["checked_in"] = True
+                item["checkin_date"] = datetime.utcnow()
+
+            if item["type"] == "shipment" and item["id"] == next_index - 2:
+                item["date_delivered"] = isoparse(product["shipment_date"])
+
+        return {"result": products.update_one({"serial_number": serial_number}, {
+            "$set": {
+                "supply_chain": updated_supply_chain
+            }
+        }).acknowledged}
+
+    def terminate_product(serial_number, username):
+        document = {"serial_number": serial_number}
+        projection = {"used": 1, "supply_chain": 1}
+
+        result = products.find_one(document, projection)
+
+        if result is None \
+            or result["used"] \
+                or not result["supply_chain"][-1]["checked_in"] \
+                or result["supply_chain"][-1]["checked_out"]:
+
+            return False
+
+        updated_supply_chain = result["supply_chain"]
+        termination_date = datetime.utcnow()
+
+        updated_supply_chain[-1]["checked_out"] = True
+        updated_supply_chain[-1]["checkout_date"] = termination_date
+
+        updated_supply_chain.append({
+            "id": len(updated_supply_chain) - 1,
+            "type": "termination",
+            "transaction_date": termination_date,
+            "owner": username
+        })
+
+        return products.update_one(document, {"$set": {"used": True, "supply_chain": updated_supply_chain}}).acknowledged
+
+    def reportProduct(serial_number):
+        products.update_one(
+            {"serial_number": serial_number}, {"reported": True})
+
+    def validateProduct(product):
+        if product is None:
+            # raise HTTPException(status_code=400, detail="Product was not found.")
+            return False
+
+        if product is product["used"]:
+            # raise HTTPException(status_code=400, detail="Product has been terminated.")
+            return False
+
+        if product is product["reported"]:
+            # raise HTTPException(status_code=400, detail="Product is blocked for investigation.")
+            return False
+
+        return True
