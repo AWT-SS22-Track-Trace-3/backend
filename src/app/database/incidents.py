@@ -18,6 +18,7 @@ incidents = client["track-trace"]["incidents"]
 
 # this database persisist security incidents in the supply chain
 
+
 class Incidents():
 
     def report(incident: Incident):
@@ -60,7 +61,7 @@ class Incidents():
         # print(list(incidents.aggregate(aggregation)))
         result = list(incidents.aggregate(aggregation))
 
-        if group_definition["formatting"]["type"] == FormattingTypes.post_aggregation:
+        if not group_definition is None and group_definition["formatting"]["type"] == FormattingTypes.post_aggregation:
             return Incidents._formatResult(result, group_definition["formatting"])
 
         return result
