@@ -28,6 +28,7 @@ router = APIRouter(
 #    API-Report_Incidents
 # <------------------------>
 
+
 @router.post("/incident")
 async def incident(report_incident: Incident, user: User = Depends(authenticate)):
     report_incident = report_incident.dict()

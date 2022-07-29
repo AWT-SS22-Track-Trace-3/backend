@@ -30,6 +30,13 @@ To force an image rebuild on docker compose, run:
 - 4: Admin, has admin access
 
 
+### Documentation
+
+#### `/docs`
+
+- GETs interactive documentation web page
+
+
 ### Authentication
 
 #### `/token`
@@ -72,27 +79,7 @@ POST:
 ```json
 {
  "type": "str",
- "product": {
-    "name": "str",
-    "common_name": "Any",
-    "form": "str",
-    "strength": "str",
-    "drug_code": "Any",
-    "pack_size": "int",
-    "pack_type": "Any",
-    "serial_number": "str",
-    "reimbursment_number": "Any",
-    "containers": "Any",
-    "batch_number": "str",
-    "expiry_date": "str",
-    "coding": "Any",
-    "marketed_states": "Any",
-    "manufacturer_name": "Any",
-    "manufacturer_adress": "Any",
-    "marketing_holder_name": "Any",
-    "marketing_holder_adress": "Any",
-    "wholesaler": "Any"
- }
+ "serial_number": "str"
 }
 ```
 
@@ -124,7 +111,7 @@ GET:
 Response:
 ```json
 {
- "heatmap_data": "[ …, { "DE": "int", "addresses": [ "str" ] }, … ]"
+ "heatmap_data": "[ …, { 'DE': 'int', 'addresses': [ 'str' ] }, … ]"
 }
 ```
 
@@ -389,3 +376,16 @@ Response:
  "access_lvl": "int"
 }
 ```
+
+
+## Security
+
+Replace the `SECRET_KEY` in `src/constants.py` with your own, using the following command:
+
+`openssl rand -hex 32`
+
+Change the `password` property (and other properties if you want to) in `dbseed/init-admin.json`, by aquiring a new password using the following command:
+
+`from passlib.context import CryptContext`
+
+`CryptContext(schemes=["bcrypt"], deprecated="auto").hash("respective_password")`

@@ -18,7 +18,6 @@ incidents = client["track-trace"]["incidents"]
 
 # this database persisist security incidents in the supply chain
 
-
 class Incidents():
 
     def report(incident: Incident):

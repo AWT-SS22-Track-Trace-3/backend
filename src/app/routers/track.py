@@ -108,8 +108,8 @@ async def terminate(body: TerminateBody, serial_number: str, user: User = Depend
     result = Tracking.terminate_product(serial_number)
     if result is False:
         Incidents.report({
-            "type": "create",
-            "information": body,
+            "type": "terminate",
+            "information": body.serial_number,
             "user": user
         })
         raise HTTPException(
