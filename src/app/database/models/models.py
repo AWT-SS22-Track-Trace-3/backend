@@ -48,6 +48,7 @@ class IncidentFilter(BaseModel):
 
 class TokenModel(BaseModel):
     access_token: str
+    refresh_token: str | None = None
     token_type: str
     access_lvl: int
 
