@@ -9,142 +9,113 @@
         "pack_type": "",
         "serial_number": "4432889436610395",
         "reimbursement_number": "",
-        "containers": "",
         "batch_number": "053816",
         "expiry_date": "31.07.2023",
         "coding": "",
-        "marketed_states": "EU",
-        "manufacturer_name": "Salutas Pharma GmbH, LEK Pharmaceuticals d.d.",
-        "manufacturer_address": "Salutas Pharma GmbH, 39179 Barleben, Deutschland; LEK Pharmaceuticals d.d., 1526 Laibach, Slowenien",
-        "marketing_holder_name": "Sandoz GmbH",
-        "marketing_holder_address": "Sandoz GmbH, 6250 Kundl, Österreich",
-        "wholesaler": ""
+        "marketed_region": "EU",
+        "reported": true,
+        "used": false,
+        "manufacturers": [
+            "sandoz_gmbh"
+        ],
+        "sellers": [],
+        "supply_chain": [
+            {
+                "id": 0,
+                "transaction_date": "2022-06-09",
+                "date_received": "2022-06-09",
+                "date_shipped": "2022-06-11",
+                "checkout_date": "2022-06-11",
+                "checkin_date": "2022-06-09",
+                "owner": "sandoz_gmbh",
+                "future_owner": "fortissa_limited",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 1,
+                "transaction_date": "2022-06-11",
+                "date_shipped": "2022-07-03",
+                "date_received": "2022-06-22",
+                "checkout_date": "2022-07-03",
+                "checkin_date": "2022-06-11",
+                "owner": "fortissa_limited",
+                "future_owner": "hopital_fondation_adolphe_de_rothschild",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 2,
+                "transaction_date": "2022-07-03",
+                "date_shipped": "",
+                "checkout_date": "",
+                "checkin_date": "2022-07-03",
+                "date_received": "2022-07-05",
+                "owner": "hopital_fondation_adolphe_de_rothschild",
+                "future_owner": "",
+                "checked_out": false,
+                "checked_in": true
+            }
+        ]
     },
     {
-        "name": "Lisinopril Pfizer 40 mg Tabletten",
+        "name": "Lisinopril Sandoz 10 mg",
         "common_name": "",
         "form": "tablet",
-        "strength": "40 mg",
-        "drug_code": "5-83066",
-        "pack_size": 30,
+        "strength": "10 mg",
+        "drug_code": "1-24034",
+        "pack_size": 100,
         "pack_type": "",
-        "serial_number": "8190596997909463",
+        "serial_number": "44328894366165883",
         "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "341950",
+        "batch_number": "053817",
         "expiry_date": "31.07.2023",
         "coding": "",
-        "marketed_states": "EU",
-        "manufacturer_name": "Pfizer Italia S.r.l., Pfizer Service Company bvba",
-        "manufacturer_address": "Ascoli Piceno, Italien; Zaventem, Belgien",
-        "marketing_holder_name": "Pfizer Corporation Austria Ges.m.b.H.",
-        "marketing_holder_address": "Floridsdorfer Hauptstraße 1, 1210 Wien",
-        "wholesaler": ""
-    },
-    {
-        "name": "Atorvalan 80 mg - Filmtabletten",
-        "common_name": "",
-        "form": "tablet",
-        "strength": "80 mg",
-        "drug_code": "1-30825",
-        "pack_size": 30,
-        "pack_type": "",
-        "serial_number": "9867014606275780",
-        "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "296318",
-        "expiry_date": "31.12.2022",
-        "coding": "",
-        "marketed_states": "EU",
-        "manufacturer_name": "G.L. Pharma GmbH",
-        "manufacturer_address": "G.L. Pharma GmbH, 8502 Lannach",
-        "marketing_holder_name": "G.L. Pharma GmbH",
-        "marketing_holder_address": "G.L. Pharma GmbH, 8502 Lannach",
-        "wholesaler": ""
-    },
-    {
-        "name": "Euthyrox 125 Mikrogramm Tabletten",
-        "common_name": "",
-        "form": "tablet",
-        "strength": "125 µg",
-        "drug_code": "1-24162",
-        "pack_size": 50,
-        "pack_type": "",
-        "serial_number": "2384985419317502",
-        "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "265893",
-        "expiry_date": "31.01.2024",
-        "coding": "",
-        "marketed_states": "EU",
-        "manufacturer_name": "Merck Healthcare KGaA, FAMAR HEALTH CARE SERVICES MADRID, S.A.U.",
-        "manufacturer_address": "Frankfurter Straße 250, 64293 Darmstadt, Deutschland; Avda. Leganés, 62, Alcorcón, 28923 Madrid, Spanien",
-        "marketing_holder_name": "Merck GmbH",
-        "marketing_holder_address": "Merck GmbH, 1147 Wien",
-        "wholesaler": ""
-    },
-    {
-        "name": "FlutiHEXAL 125 Mikrogramm/Sprühstoß Druckgasinhalation, Suspension",
-        "common_name": "",
-        "form": "suspension",
-        "strength": "125 µg",
-        "drug_code": "1-38945",
-        "pack_size": 120,
-        "pack_type": "",
-        "serial_number": "1121502502863027",
-        "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "745620",
-        "expiry_date": "31.05.2023",
-        "coding": "",
-        "marketed_states": "EU",
-        "manufacturer_name": "Salutas Pharma GmbH",
-        "manufacturer_address": "Otto-von-Guericke-Allee 1, 39179 Barleben",
-        "marketing_holder_name": "Hexal AG",
-        "marketing_holder_address": "Industriestraße 25 83607 Holzkirchen",
-        "wholesaler": ""
-    },
-    {
-        "name": "Metformin Hydrochloride Tablets-850mg",
-        "common_name": "",
-        "form": "tablet",
-        "strength": "850 mg",
-        "drug_code": "62135-683-90",
-        "pack_size": 90,
-        "pack_type": "",
-        "serial_number": "9982722773858693",
-        "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "346180",
-        "expiry_date": "31.10.2024",
-        "coding": "",
-        "marketed_states": "USA",
-        "manufacturer_name": "Chartwell Pharmaceuticals, LLC.",
-        "manufacturer_address": "Congers, NY 10920",
-        "marketing_holder_name": "Chartwell RX, LLC.",
-        "marketing_holder_address": "Congers, NY 10920",
-        "wholesaler": ""
-    },
-    {
-        "name": "Metformin Hydrochloride Tablets-1000mg",
-        "common_name": "",
-        "form": "tablet",
-        "strength": "1000 mg",
-        "drug_code": "62135-684-18",
-        "pack_size": 180,
-        "pack_type": "",
-        "serial_number": "9982722773858693",
-        "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "346180",
-        "expiry_date": "31.10.2024",
-        "coding": "",
-        "marketed_states": "USA",
-        "manufacturer_name": "Chartwell Pharmaceuticals, LLC.",
-        "manufacturer_address": "Congers, NY 10920",
-        "marketing_holder_name": "Chartwell RX, LLC.",
-        "marketing_holder_address": "Congers, NY 10920",
-        "wholesaler": ""
+        "marketed_region": "EU",
+        "reported": true,
+        "used": false,
+        "manufacturers": [
+            "sandoz_gmbh"
+        ],
+        "sellers": [],
+        "supply_chain": [
+            {
+                "id": 0,
+                "transaction_date": "2022-06-09",
+                "date_received": "2022-06-09",
+                "date_shipped": "2022-06-11",
+                "checkout_date": "2022-06-11",
+                "checkin_date": "2022-06-09",
+                "owner": "sandoz_gmbh",
+                "future_owner": "fortissa_limited",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 1,
+                "transaction_date": "2022-06-11",
+                "date_shipped": "2022-07-03",
+                "date_received": "2022-06-22",
+                "checkout_date": "2022-07-03",
+                "checkin_date": "2022-06-11",
+                "owner": "fortissa_limited",
+                "future_owner": "hopital_fondation_adolphe_de_rothschild",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 2,
+                "transaction_date": "2022-07-03",
+                "date_shipped": "",
+                "checkout_date": "",
+                "checkin_date": "2022-07-03",
+                "date_received": "2022-07-05",
+                "owner": "hopital_fondation_adolphe_de_rothschild",
+                "future_owner": "",
+                "checked_out": false,
+                "checked_in": true
+            }
+        ]
     },
     {
         "name": "Metformin Hydrochloride Tablets-500mg",
@@ -156,57 +127,232 @@
         "pack_type": "",
         "serial_number": "9982722773858693",
         "reimbursement_number": "",
-        "containers": "",
         "batch_number": "346180",
         "expiry_date": "31.10.2024",
         "coding": "",
-        "marketed_states": "USA",
-        "manufacturer_name": "Chartwell Pharmaceuticals, LLC.",
-        "manufacturer_address": "Congers, NY 10920",
-        "marketing_holder_name": "Chartwell RX, LLC.",
-        "marketing_holder_address": "Congers, NY 10920",
-        "wholesaler": ""
+        "marketed_region": "USA",
+        "reported": true,
+        "used": false,
+        "sellers": [],
+        "manufacturers": [
+            "chartwell_pharmaceuticals_llc"
+        ],
+        "supply_chain": [
+            {
+                "id": 0,
+                "transaction_date": "2022-07-01",
+                "date_received": "2022-07-01",
+                "date_shipped": "",
+                "checkout_date": "",
+                "checkin_date": "",
+                "owner": "chartwell_pharmaceuticals_llc",
+                "future_owner": "",
+                "checked_out": false,
+                "checked_in": true
+            },
+            {
+                "id": 1,
+                "transaction_date": "2022-07-05",
+                "date_received": "2022-07-05",
+                "date_shipped": "",
+                "checkout_date": "",
+                "checkin_date": "",
+                "owner": "mckesson_corporation",
+                "future_owner": "",
+                "checked_out": false,
+                "checked_in": true
+            }
+        ]
     },
     {
-        "name": "Lopressor (metoprolol tartrate USP) Tablets",
+        "name": "Bayer Test Product",
         "common_name": "",
-        "form": "tablets",
-        "strength": "50 mg",
-        "drug_code": "30698-458-01",
+        "form": "tablet",
+        "strength": "10 mg",
+        "drug_code": "67545456",
         "pack_size": 100,
         "pack_type": "",
-        "serial_number": "5168204892122758",
+        "serial_number": "5532889436610399",
         "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "762914",
+        "batch_number": "4358748",
         "expiry_date": "31.07.2023",
         "coding": "",
-        "marketed_states": "USA",
-        "manufacturer_name": "Validus Pharmaceuticals LLC",
-        "manufacturer_address": "90 East Halsey Road, NJ 07054",
-        "marketing_holder_name": "Validus Pharmaceuticals LLC",
-        "marketing_holder_address": "90 East Halsey Road, NJ 07054",
-        "wholesaler": ""
+        "marketed_region": "EU",
+        "reported": false,
+        "used": true,
+        "manufacturers": [
+            "bayer_ag"
+        ],
+        "sellers": [],
+        "supply_chain": [
+            {
+                "id": 0,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-11T12:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "owner": "bayer_ag",
+                "future_owner": "fortissa_limited",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 1,
+                "shipment_method": "air",
+                "tracking_number": "5347829374293462783472",
+                "date_shipped": {
+                    "$date": "2022-06-11T18:00:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-13T09:38:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 2,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-20T14:56:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-14T08:23:00Z"
+                },
+                "owner": "fortissa_limited",
+                "future_owner": "charite_berlin",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 3,
+                "shipment_method": "sea",
+                "tracking_number": "74659283420398463756348",
+                "date_shipped": {
+                    "$date": "2022-06-20T16:32:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-23T09:46:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 4,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-18T00:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-23T10:46:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-25T22:13:00Z"
+                },
+                "owner": "charite_berlin",
+                "future_owner": "",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "id": 5,
+                "type": "termination",
+                "transaction_date": {
+                    "$date": "2022-06-25T22:13:00Z"
+                },
+                "owner": "charite_berlin"
+            }
+        ]
     },
     {
-        "name": "Lopressor (metoprolol tartrate USP) Tablets",
+        "name": "Bayer Test Product 2",
         "common_name": "",
-        "form": "tablets",
-        "strength": "100 mg",
-        "drug_code": "30698-459-01",
+        "form": "tablet",
+        "strength": "10 mg",
+        "drug_code": "67545456",
         "pack_size": 100,
         "pack_type": "",
-        "serial_number": "5168204892122758",
+        "serial_number": "6457893284230987435",
         "reimbursement_number": "",
-        "containers": "",
-        "batch_number": "762914",
+        "batch_number": "4358748",
         "expiry_date": "31.07.2023",
         "coding": "",
-        "marketed_states": "USA",
-        "manufacturer_name": "Validus Pharmaceuticals LLC",
-        "manufacturer_address": "90 East Halsey Road, NJ 07054",
-        "marketing_holder_name": "Validus Pharmaceuticals LLC",
-        "marketing_holder_address": "90 East Halsey Road, NJ 07054",
-        "wholesaler": ""
+        "marketed_region": "EU",
+        "reported": true,
+        "used": false,
+        "manufacturers": [
+            "bayer_ag"
+        ],
+        "sellers": [],
+        "supply_chain": [
+            {
+                "id": 0,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-11T12:00:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "owner": "bayer_ag",
+                "future_owner": "fortissa_limited",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 1,
+                "shipment_method": "air",
+                "tracking_number": "5347829374293462783472",
+                "date_shipped": {
+                    "$date": "2022-06-11T18:00:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-13T09:38:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            },
+            {
+                "id": 2,
+                "type": "change_of_ownership",
+                "transaction_date": {
+                    "$date": "2022-06-09T00:00:00Z"
+                },
+                "checkout_date": {
+                    "$date": "2022-06-20T14:56:00Z"
+                },
+                "checkin_date": {
+                    "$date": "2022-06-14T08:23:00Z"
+                },
+                "owner": "fortissa_limited",
+                "future_owner": "charite_berlin",
+                "checked_out": true,
+                "checked_in": true
+            },
+            {
+                "type": "shipment",
+                "id": 3,
+                "shipment_method": "sea",
+                "tracking_number": "74659283420398463756348",
+                "date_shipped": {
+                    "$date": "2022-06-20T16:32:00Z"
+                },
+                "date_delivered": {
+                    "$date": "2022-06-23T09:46:00Z"
+                },
+                "owner": "deutsche_post_ag"
+            }
+        ]
     }
 ]

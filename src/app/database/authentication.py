@@ -2,16 +2,10 @@ from passlib.context import CryptContext
 import pymongo
 
 from ..constants import *
+from .init import client
+from .models.models import AccessLevels
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# pymongo connecting to mongoDB
-client = pymongo.MongoClient(
-    host=MONGO['DOCKER'],
-    port=MONGO['PORT'],
-    username=MONGO['USERNAME'],
-    password=MONGO['PASSWORD']
-)
 users = client["track-trace"]["users"]
 
 class Authentication:
@@ -48,5 +42,7 @@ class Authentication:
             return False
 
         new_user["password"] = pwd_context.hash(new_user["password"])
+
+        new_user["access_lvl"] = AccessLevels[new_user["type"]]
 
         return users.insert_one(new_user).acknowledged
