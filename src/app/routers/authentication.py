@@ -34,7 +34,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 class Token(BaseModel):
     access_token: str
-    refresh_token: str = None
+    refresh_token: str | None = None
     token_type: str
     access_lvl: int
 
