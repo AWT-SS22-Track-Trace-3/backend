@@ -41,7 +41,7 @@ To force an image rebuild on docker compose, run:
 
 #### `/token`
 
-- generates session token
+- generates session and refresh token
 
 POST (x-www-form-urlencoded): 
 ```
@@ -49,6 +49,32 @@ POST (x-www-form-urlencoded):
  username: str
  password: str
 }
+```
+
+Response: 
+```json
+{  
+ "access_token": "str",
+ "refresh_token": "str",
+ "token_type": "str",
+ "access_lvl": "int"
+}
+```
+
+#### `/refresh`
+
+- generates new session token
+
+Header:
+```json
+{
+ "refresh_token": "str"  
+}
+```
+
+GET: 
+```
+{ }
 ```
 
 Response: 
