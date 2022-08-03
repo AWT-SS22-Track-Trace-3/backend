@@ -66,10 +66,11 @@ async def token(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     response.set_cookie(key="access_lvl", value=access_lvl)
 
     return {
-        "access_token": token,
+        "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
-        "access_lvl": access_lvl}
+        "access_lvl": access_lvl
+    }
 
 
 async def authenticate(token: str = Depends(oauth2_scheme)):
