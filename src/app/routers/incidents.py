@@ -59,9 +59,7 @@ async def getIncidentSummary(
         raise HTTPException(
             status_code=400, detail="Insufficient authorization")
 
-    pagination = None
-    if limit is not None and offset is not None:
-        pagination = Pagination(limit, offset)
+    pagination = Pagination(limit, offset)
 
     return Incidents.getGroupedIncidents(country, group, sort, pagination)
 
@@ -82,9 +80,7 @@ async def getIncidents(
         raise HTTPException(
             status_code=400, detail="Insufficient authorization")
 
-    pagination = None
-    if limit is not None and offset is not None:
-        pagination = Pagination(limit, offset)
+    pagination = Pagination(limit, offset)
 
     return Incidents.getIncidents(country, filter_type, filter_value, pagination)
 

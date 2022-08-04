@@ -59,7 +59,7 @@ class Incidents():
         # print(aggregation)
 
         # print(list(incidents.aggregate(aggregation)))
-        result = list(incidents.aggregate(aggregation))
+        result = list(incidents.aggregate(aggregation))[0]
 
         if not group_definition is None and group_definition["formatting"]["type"] == FormattingTypes.post_aggregation:
             return Incidents._formatResult(result, group_definition["formatting"])
@@ -68,7 +68,7 @@ class Incidents():
 
     def _formatResult(result, definition):
        # print(definition)
-        for item in result:
+        for item in result["data"]:
             item = definition["fn"](item, definition["format"])
 
         return result
@@ -118,7 +118,7 @@ class Incidents():
         # print(aggregation)
         # print(list(incidents.aggregate(aggregation)))
 
-        return(list(incidents.aggregate(aggregation)))
+        return(list(incidents.aggregate(aggregation))[0])
 
 
 class FilterTypes(Enum):

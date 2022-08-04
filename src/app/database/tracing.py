@@ -73,7 +73,7 @@ class Tracing:
 
         result = list(products.aggregate(aggregation))
 
-        # print(aggregation, result)
+        print(aggregation, result)
 
         if len(result) == 1:
             return Tracing._mergeSupplyChain(result[0])
@@ -86,7 +86,6 @@ class Tracing:
         if len(product["incidents"]) > 0 and "type" in product["incidents"][0]:
             for incident in product["incidents"]:
                 for index, item in enumerate(product["supply_chain"]):
-                    print(index, item)
                     if item["type"] != "incident" and item["id"] == incident["chain_step"]:
                         incident_item = incident
                         incident_item["incident_type"] = incident["type"]
