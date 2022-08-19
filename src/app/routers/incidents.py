@@ -37,7 +37,7 @@ async def incident(report_incident: Incident, user: User = Depends(authenticate)
         "description": report_incident["description"],
         "product": report_incident["product"],
         "chain_step": report_incident["chain_step"],
-        "reported": {
+        "reporter": {
             "timestamp": datetime.now(),
             "user": user["username"]
         }

@@ -43,6 +43,6 @@ class Authentication:
 
         new_user["password"] = pwd_context.hash(new_user["password"])
 
-        new_user["access_lvl"] = AccessLevels[new_user["type"]]
+        new_user["access_lvl"] = AccessLevels[new_user["type"]].value
 
         return users.insert_one(new_user).acknowledged

@@ -183,7 +183,7 @@ class Tracking:
 
     def reportProduct(serial_number):
         products.update_one(
-            {"serial_number": serial_number}, {"reported": True})
+            {"serial_number": serial_number}, {"$set": {"reported": True}})
 
     def validateProduct(product):
         if product is None:

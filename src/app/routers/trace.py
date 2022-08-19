@@ -44,5 +44,8 @@ async def search(query: Query, user: User = Depends(authenticate)):
 
 @router.get("/product/{serial_number}")
 async def getProduct(serial_number, user: User = Depends(authenticate)):
-    result = Tracing.getProduct(serial_number)
+    if user["access_lvl"] == AccessLevels.admin.value or user["access_lvl"] == AccessLevels.authority.value:
+        result = Tracing.getProduct(serial_number)
+    else:
+        result = Tracing.getRestrictedProduct(serial_number, user["username"])
     return result

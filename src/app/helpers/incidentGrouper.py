@@ -39,8 +39,6 @@ class IncidentGrouper:
         for key in self.definition["aggregation_key"].keys():
             object["_id." + key] = order
 
-        print(object)
-
         return {
             "$sort": object
         }

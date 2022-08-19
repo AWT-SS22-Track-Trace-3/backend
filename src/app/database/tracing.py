@@ -82,6 +82,23 @@ class Tracing:
         elif len(result) < 1:
             return []
 
+    def getRestrictedProduct(serial_number, username):
+        aggregator = ProductAggregator()
+
+        aggregation = (aggregator.getProductBySerial(serial_number))
+
+        result = list(products.aggregate(aggregation))
+
+        #print(aggregation, result)
+
+        if len(result) == 1:
+            return Tracing._mergeSupplyChain(Tracing._reverseCutSupplyChain(result[0], username))
+            #return Tracing._reverseCutSupplyChain(Tracing._mergeSupplyChain(result[0]), username)
+        elif len(result) > 1:
+            return False
+        elif len(result) < 1:
+            return []
+
     def _mergeSupplyChain(product):
         if len(product["incidents"]) > 0 and "type" in product["incidents"][0]:
             for incident in product["incidents"]:

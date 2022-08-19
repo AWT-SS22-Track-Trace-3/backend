@@ -2,13 +2,6 @@ version: "3.9"
 volumes:
   mongodata:
 services:
-  web:
-    build: src/
-    depends_on:
-      - mongo
-    container_name: backend
-    ports:
-      - "8000:8000"
   mongo:
     image: mongo
     container_name: backend-mongo
@@ -25,16 +18,16 @@ services:
     build: ./dbseed
     depends_on:
       - mongo
-#  mongo-express:
-#    image: mongo-express
-#    depends_on:
-#      - mongo
-#    container_name: backend-mongo-express
-#    ports:
-#      - "8081:8081"
-#    environment:
-#      ME_CONFIG_MONGODB_SERVER: mongo
-#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
-#      ME_CONFIG_MONGODB_ADMINPASSWORD: SuperSecret
-#      ME_CONFIG_BASICAUTH_USERNAME: admin
-#      ME_CONFIG_BASICAUTH_PASSWORD: SuperSecret
+  tracktrace_backend:
+    build: src/
+    depends_on:
+      - mongo
+    ports:
+      - "8000:8000"
+  tracktrace_frontend:
+    image: ghcr.io/awt-ss22-track-trace-3/frontend:eef025ca956ea255105a00fdfa5193f9b4fa5b01
+    depends_on:
+      - tracktrace_backend
+      - mongo
+    ports:
+      - "3000:80"
