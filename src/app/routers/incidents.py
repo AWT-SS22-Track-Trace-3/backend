@@ -1,5 +1,6 @@
 from optparse import Option
 from fastapi import APIRouter, HTTPException, Depends
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -8,6 +9,7 @@ import json
 from .authentication import User, authenticate
 from ..database.incidents import Incidents
 from ..database.models.models import Incident, IncidentFilter
+from ..database.models.http_responses import *
 from ..helpers.pagination import Pagination
 
 
@@ -29,8 +31,11 @@ router = APIRouter(
 # <------------------------>
 
 
-@router.post("/incident")
+@router.post("/incident", responses=default_responses)
 async def incident(report_incident: Incident, user: User = Depends(authenticate)):
+    """
+    Post a new incident. 
+    """
     report_incident = report_incident.dict()
     incident = {
         "type": report_incident["type"],
@@ -43,10 +48,10 @@ async def incident(report_incident: Incident, user: User = Depends(authenticate)
         }
     }
     acknowledged = Incidents.report(incident)
-    return {"acknowledged": acknowledged}
+    return JSONResponse(status_code=200, content={"acknowledged": acknowledged})
 
 
-@router.get("/incidents/summary/{country}")
+@router.get("/incidents/summary/{country}", responses=unauth_response)
 async def getIncidentSummary(
         country: str = "all",
         group: Optional[str] = "day",
@@ -54,20 +59,23 @@ async def getIncidentSummary(
         limit: Optional[int] = None,
         offset: Optional[int] = None,
         user: User = Depends(authenticate)):
+"""
+Get incident summary gouped by the specified criterion. Information include total incident count and unique companies involved.
+Setting country to 'all' will group be country.
+"""
 
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
 
     pagination = Pagination(limit, offset)
 
-    return Incidents.getGroupedIncidents(country, group, sort, pagination)
+    return JSONResponse(status_code=200, content=Incidents.getGroupedIncidents(country, group, sort, pagination))
 
 # Get all incidents for a specific group key (like month 7) and country but enable pass-around values:
 # Get all incidents for one country with group = None, Get all incidents with country = None and group = None etc.
 
 
-@router.get("/incidents/{country}")
+@router.get("/incidents/{country}", responses=unauth_response)
 async def getIncidents(
     filter_type: str = None,
     filter_value: str = None,
@@ -76,18 +84,23 @@ async def getIncidents(
     offset: Optional[int] = None,
     user: User = Depends(authenticate)
 ):
+"""
+Get incidents of one country for a filter specification. Filter type can be any from ["company", "incident_type", "day", "month", "year"]
+with the according filter value. Filter values for day, month and year must be valid ISO date strings.
+"""
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
 
     pagination = Pagination(limit, offset)
 
-    return Incidents.getIncidents(country, filter_type, filter_value, pagination)
+    return JSONResponse(status_code=200, content=Incidents.getIncidents(country, filter_type, filter_value, pagination))
 
 
-@router.get("/heatmap")
+@router.get("/heatmap", responses=unauth_response)
 async def heatmap(user: User = Depends(authenticate)):
+    """
+    (deprecated)
+    """
     if user["access_lvl"] != 3 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
-    return {"heatmap_data": Incidents.heatmap_data()}
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
+    return JSONResponse(status_code=200, content={"heatmap_data": Incidents.heatmap_data()})

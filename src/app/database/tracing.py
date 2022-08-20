@@ -93,7 +93,6 @@ class Tracing:
 
         if len(result) == 1:
             return Tracing._mergeSupplyChain(Tracing._reverseCutSupplyChain(result[0], username))
-            #return Tracing._reverseCutSupplyChain(Tracing._mergeSupplyChain(result[0]), username)
         elif len(result) > 1:
             return False
         elif len(result) < 1:

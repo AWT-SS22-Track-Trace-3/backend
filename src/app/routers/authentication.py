@@ -1,6 +1,8 @@
 from os import access
+from pstats import Stats
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi import APIRouter, HTTPException, Depends, status, Response, Cookie
+from fastapi.responses import JSONResponse
 from datetime import datetime, timedelta
 from dateutil.relativedelta import *
 from jose import JWTError, jwt
@@ -8,6 +10,7 @@ from tokenize import Token
 
 from ..database.authentication import Authentication
 from ..database.models.models import User, TokenModel
+from ..database.models.http_responses import *
 from ..constants import JWT
 
 
@@ -50,12 +53,11 @@ def create_refresh_token(data: dict):
     return jwt.encode(to_encode, JWT['SECRET_REFRESH_KEY'], algorithm=JWT['ALGORITHM'])
 
 
-@router.post("/token", response_model=TokenModel)
+@router.post("/token", responses={200: {"model": TokenModel}, 400: {"model": ModelMessage}})
 async def token(response: Response, form_data: OAuth2PasswordRequestForm = Depends()):
     user_info = Authentication.is_user(form_data.username, form_data.password)
     if not user_info[0]:
-        raise HTTPException(
-            status_code=400, detail="Incorrect username or password!")
+        return JSONResponse(status_code=400, content={"message": "Incorrect username or password!"})
 
     access_token = create_token({"sub": form_data.username})
     refresh_token = create_refresh_token({"sub": form_data.username})
@@ -65,12 +67,12 @@ async def token(response: Response, form_data: OAuth2PasswordRequestForm = Depen
     response.set_cookie(key="refresh_token", value=refresh_token)
     response.set_cookie(key="access_lvl", value=access_lvl)
 
-    return {
+    return JSONResponse(status_code=200, content={
         "access_token": access_token,
         "refresh_token": refresh_token,
         "token_type": "bearer",
         "access_lvl": access_lvl
-    }
+    })
 
 
 async def authenticate(token: str = Depends(oauth2_scheme)):

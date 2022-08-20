@@ -6,6 +6,7 @@ from .authentication import User, authenticate
 from ..database.incidents import Incidents
 from ..database.tracking import Tracking
 from ..database.models.models import NewProduct, ProductCheckin, ProductCheckout
+from ..database.models.http_responses import *
 
 
 # Definition - access_lvl
@@ -25,11 +26,14 @@ router = APIRouter(
 #    API-Track_Products
 # <------------------------>
 
-@router.post("/products/create")
+@router.post("/products/create", responses={**default_responses, 400: {"model": ModelMessage}})
 async def create(product: NewProduct, user: User = Depends(authenticate)):
+    """
+    Post a new product to the database. Products can only be registered by manufacturers and administrators.
+    """
+
     if user["access_lvl"] != 2 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
     result = Tracking.create_product(product.dict(), user)
     if result is False:
         Incidents.report({
@@ -42,17 +46,18 @@ async def create(product: NewProduct, user: User = Depends(authenticate)):
                 "timestamp": datetime.now()
             }
         })
-        raise HTTPException(
-            status_code=400, detail="Error in system, product already exists. Please contact authorities.")
-
-    return {"acknowledged": result}
+        return JSONResponse(status_code=400, content={"message": "Error in system, product already exists. Please contact authorities."})
+    return JSONResponse(status_code=200, content={"acknowledged": result})
 
 
-@router.post("/products/{serial_number}/checkout")
+@router.post("/products/{serial_number}/checkout", responses={**default_responses, 400: {"model": ModelMessage}})
 async def checkout(body: ProductCheckout, serial_number: str, user: User = Depends(authenticate)):
+    """
+    Checkout a product. Can only be used by manufacturers, wholesalers, repackagers and administrators.
+    """
+
     if user["access_lvl"] != 0 and user["access_lvl"] != 2 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
     result = Tracking.checkout_product(
         serial_number, body.dict(), user["username"])
     if result["result"] is False:
@@ -66,17 +71,18 @@ async def checkout(body: ProductCheckout, serial_number: str, user: User = Depen
                 "timestamp": datetime.now()
             }
         })
-        raise HTTPException(
-            status_code=400, detail="Error in system, please contact authorities.")
-
-    return {"acknowledged": result["result"]}
+        return JSONResponse(status_code=400, content={"message": "Error in system, please contact authorities."})
+    return JSONResponse(status_code=200, content={"acknowledged": result})
 
 
-@router.post("/products/{serial_number}/checkin")
+@router.post("/products/{serial_number}/checkin", responses={**default_responses, 400: {"model": ModelMessage}})
 async def checkin(body: ProductCheckin, serial_number: str, user: User = Depends(authenticate)):
+    """
+    Checkin a product. Can only be used by wholesalers, repackagers, dispensers and administrators.
+    """
+
     if user["access_lvl"] != 0 and user["access_lvl"] != 1 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
     result = Tracking.checkin_product(
         serial_number, body.dict(), user["username"])
     if result["result"] is False:
@@ -90,21 +96,23 @@ async def checkin(body: ProductCheckin, serial_number: str, user: User = Depends
                 "timestamp": datetime.now()
             }
         })
-        raise HTTPException(
-            status_code=400, detail="Error in system, please contact authorities.")
-
-    return {"acknowledged": result["result"]}
+        return JSONResponse(status_code=400, content={"message": "Error in system, please contact authorities."})
+    return JSONResponse(status_code=200, content={"acknowledged": result})
 
 
 class TerminateBody(BaseModel):
     serial_number: str
 
 
-@router.put("/products/{serial_number}/terminate")
+@router.put("/products/{serial_number}/terminate", responses={**default_responses, 400: {"model": ModelMessage}})
 async def terminate(body: TerminateBody, serial_number: str, user: User = Depends(authenticate)):
+    """
+    Terminate a product to indicate it successful administration/sell-off. Can only be used dispensers and administrators.
+    """
+
     if user["access_lvl"] != 1 and user["access_lvl"] != 4:
-        raise HTTPException(
-            status_code=400, detail="Insufficient authorization")
+        return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
+
     result = Tracking.terminate_product(serial_number)
     if result is False:
         Incidents.report({
@@ -112,7 +120,5 @@ async def terminate(body: TerminateBody, serial_number: str, user: User = Depend
             "information": body.serial_number,
             "user": user
         })
-        raise HTTPException(
-            status_code=400, detail="Error in system, please contact authorities.")
-
-    return {"acknowledged": result}
+        return JSONResponse(status_code=400, content={"message": "Error in system, please contact authorities."})
+    return JSONResponse(status_code=200, content={"acknowledged": result})

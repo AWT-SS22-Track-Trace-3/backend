@@ -169,3 +169,13 @@ class ProductAggregator:
         self.builder.addProjection({"incidents": 0})
 
         return self.builder.build()
+
+    def getProductBySerialRestricted(self, serial_number, company):
+        match = self._companyMatch(company)
+
+        self.builder = AggregationPipelineBuilder().init(match)
+        self.builder.addMatch(self._serialMatch(serial_number))
+        self._addBaseLookup()
+        self.builder.addProjection({"incidents": 0})
+
+        return self.builder.build()
