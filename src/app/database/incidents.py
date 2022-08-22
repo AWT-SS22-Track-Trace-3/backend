@@ -59,7 +59,12 @@ class Incidents():
         # print(aggregation)
 
         # print(list(incidents.aggregate(aggregation)))
-        result = list(incidents.aggregate(aggregation))[0]
+        result = list(incidents.aggregate(aggregation))
+
+        if(len(result) == 1):
+            result = result[0]
+        else:
+            return []
 
         if not group_definition is None and group_definition["formatting"]["type"] == FormattingTypes.post_aggregation:
             return Incidents._formatResult(result, group_definition["formatting"])
@@ -118,7 +123,12 @@ class Incidents():
         # print(aggregation)
         # print(list(incidents.aggregate(aggregation)))
 
-        return(list(incidents.aggregate(aggregation))[0])
+        result = list(incidents.aggregate(aggregation))
+
+        if(len(result) == 1):
+            return result[0]
+        else:
+            return []
 
 
 class FilterTypes(Enum):
