@@ -25,7 +25,7 @@ services:
     ports:
       - "8000:8000"
   tracktrace_frontend:
-    image: docker pull ghcr.io/awt-ss22-track-trace-3/frontend:576b8e8ae14614efaf8f0748991b1915e40b2fbd
+    image: ghcr.io/awt-ss22-track-trace-3/frontend:576b8e8ae14614efaf8f0748991b1915e40b2fbd
     depends_on:
       - tracktrace_backend
       - mongo
