@@ -54,7 +54,7 @@ async def signup(new_user: NewUser, user: User = Depends(authenticate)):
     if countries.get(alpha_2=new_user.country) is None:
         return JSONResponse(status_code=400, content={"message": "Country does not exist!"})
 
-    if not Authentication.signup(new_user.dict()):
+    if not Authentication.signup(user, new_user.dict()):
         return JSONResponse(status_code=400, content={"message": "User already exists!"})
 
     return JSONResponse(status_code=200, content={"acknowledged": True})

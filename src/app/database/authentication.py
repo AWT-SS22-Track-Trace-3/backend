@@ -1,7 +1,9 @@
 from passlib.context import CryptContext
+from iroha import IrohaCrypto
 import pymongo
 
 from ..constants import *
+from ..blockchain.iroha_authentication import IrohaAuthentication
 from .init import client
 from .models.models import AccessLevels
 
@@ -37,12 +39,14 @@ class Authentication:
             return { "is_username": True }
         return { "is_username": False }
 
-    def signup(new_user):
+    def signup(user, new_user):
         if users.find_one( { "username": new_user["username"] } ) is not None:
             return False
 
         new_user["password"] = pwd_context.hash(new_user["password"])
 
         new_user["access_lvl"] = AccessLevels[new_user["type"]].value
+
+        new_user["private_key"] = IrohaAuthentication.create_account(user["private_key"], user["username"], new_user["username"], new_user["type"])
 
         return users.insert_one(new_user).acknowledged

@@ -6,6 +6,7 @@ from datetime import datetime
 from dateutil.parser import isoparse
 
 from ..constants import *
+from ..blockchain.iroha_authentication import IrohaAuthentication
 from .init import client
 
 # pymongo connecting to mongoDB
@@ -45,11 +46,13 @@ class Tracking:
                 if key != "supplier" and key != "supply_chain":
                     entry[key] = val
 
+            IrohaAuthentication.create_asset(user["private_key"], user["username"], product["serial_number"], amount=1)
+
             return products.insert_one(entry).acknowledged
 
         return False
 
-    def checkout_product(serial_number, product, username):
+    def checkout_product(serial_number, product, user):
         target_product = products.find_one({
             "serial_number": serial_number
         })
@@ -66,7 +69,7 @@ class Tracking:
         print(target_product)
 
         for item in target_product["supply_chain"]:
-            if item.get("owner") == username:
+            if item.get("owner") == user["username"]:
                 if not item.get("checked_in"):
                     #raise HTTPException(status_code=400, detail="Product was not previously checked out.")
                     return {
@@ -77,7 +80,7 @@ class Tracking:
         new_supply_chain: list = target_product["supply_chain"]
 
         for chain_step in new_supply_chain:
-            if not chain_step.get("checked_out") and chain_step.get("checked_in") and chain_step.get("owner") == username:
+            if not chain_step.get("checked_out") and chain_step.get("checked_in") and chain_step.get("owner") == user["username"]:
                 chain_step["checked_out"] = True
                 chain_step["checkout_date"] = datetime.utcnow()
                 chain_step["future_owner"] = product["future_owner"]
@@ -101,7 +104,7 @@ class Tracking:
             }
         ]
 
-        # print(new_supply_chain)
+        IrohaAuthentication.transfer_asset(user["private_key"], user["username"], product["future_owner"], serial_number, amount=1)
 
         return {"result": products.update_one({"serial_number": serial_number}, {
             "$set": {
@@ -153,7 +156,7 @@ class Tracking:
             }
         }).acknowledged}
 
-    def terminate_product(serial_number, username):
+    def terminate_product(serial_number, user):
         document = {"serial_number": serial_number}
         projection = {"used": 1, "supply_chain": 1}
 
@@ -176,8 +179,10 @@ class Tracking:
             "id": len(updated_supply_chain) - 1,
             "type": "termination",
             "transaction_date": termination_date,
-            "owner": username
+            "owner": user["username"]
         })
+
+        IrohaAuthentication.subtract_asset(user["private_key"], user["username"], serial_number, amount=1)
 
         return products.update_one(document, {"$set": {"used": True, "supply_chain": updated_supply_chain}}).acknowledged
 

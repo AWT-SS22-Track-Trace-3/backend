@@ -8,6 +8,7 @@ from .routers.authentication import User, authenticate
 app = FastAPI()
 
 origins = [
+    "*",                       #enable if you want to access the API from outside origins
     "http://localhost:3000"
 ]
 

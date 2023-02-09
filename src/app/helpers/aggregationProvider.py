@@ -1,3 +1,5 @@
+from typing import Union
+
 class AggregationPipelineBuilder:
     pipeline = []
 
@@ -33,7 +35,7 @@ class AggregationPipelineBuilder:
 
         return self
 
-    def addFields(self, field_name, expr: dict | str):
+    def addFields(self, field_name, expr: Union[dict, str]):
         result = {
             "$addFields": {}
         }
@@ -84,7 +86,7 @@ class AggregationPipelineBuilder:
 
         return self
 
-    def addUnwind(self, unwind: str | dict):
+    def addUnwind(self, unwind: Union[str, dict]):
         self.pipeline.append({
             "$unwind": unwind
         })

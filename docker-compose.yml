@@ -1,7 +1,21 @@
 version: "3.9"
 volumes:
   mongodata:
+  blockstore:
+  rocksdb:
 services:
+  iroha:
+    image: hyperledger/iroha:latest
+    container_name: iroha
+    ports: 
+      - "50051:50051"
+    volumes:
+      - blockstore:/tmp/block_store
+      - ./iroha_data:/opt/iroha_data
+      - rocksdb:/path/to/wsv/folder
+    environment:
+      - KEY=keys/node0
+    #entrypoint: irohad
   mongo:
     image: mongo
     container_name: backend-mongo
@@ -9,7 +23,7 @@ services:
       - "27017:27017"
     volumes:
       - mongodata:/data/db
-      - ./data:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./data/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
     environment:
       MONGO_INITDB_DATABASE: track-trace
       MONGO_INITDB_ROOT_USERNAME: root
@@ -22,6 +36,7 @@ services:
     build: src/
     depends_on:
       - mongo
+      - iroha
     ports:
       - "8000:8000"
   tracktrace_frontend:
@@ -29,5 +44,6 @@ services:
     depends_on:
       - tracktrace_backend
       - mongo
+      - iroha
     ports:
       - "3000:80"

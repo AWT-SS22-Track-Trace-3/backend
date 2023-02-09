@@ -60,7 +60,7 @@ async def checkout(body: ProductCheckout, serial_number: str, user: User = Depen
     if user["access_lvl"] != 0 and user["access_lvl"] != 2 and user["access_lvl"] != 4:
         return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
     result = Tracking.checkout_product(
-        serial_number, body.dict(), user["username"])
+        serial_number, body.dict(), user)
     if result["result"] is False:
         Incidents.report({
             "type": "invalid_checkout",
@@ -114,7 +114,7 @@ async def terminate(body: TerminateBody, serial_number: str, user: User = Depend
     if user["access_lvl"] != 1 and user["access_lvl"] != 4:
         return JSONResponse(status_code=403, content={"message": "Insufficient authorization"})
 
-    result = Tracking.terminate_product(serial_number)
+    result = Tracking.terminate_product(serial_number, user)
     if result is False:
         Incidents.report({
             "type": "terminate",

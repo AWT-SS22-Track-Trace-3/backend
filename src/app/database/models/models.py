@@ -1,7 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel
 from datetime import (datetime, date)
-from typing import (Any, List, Optional)
+from typing import (Any, List, Optional, Union)
 
 
 class _Address(BaseModel):
@@ -29,12 +29,12 @@ class _SupplyChainItem(BaseModel):
 
 
 class _Supplier(BaseModel):
-    transaction_date: str | datetime
+    transaction_date: Union[str, datetime]
     owner: str
 
 
 class _ShipmentModel(BaseModel):
-    date: str | datetime
+    date: Union[str, datetime]
     shipment_method: str
     tracking_number: str
     handler: str
@@ -42,13 +42,13 @@ class _ShipmentModel(BaseModel):
 
 class IncidentFilter(BaseModel):
     filter_type: str
-    filter_value: str | datetime
+    filter_value: Union[str, datetime]
     interval: Optional[str] = None
 
 
 class TokenModel(BaseModel):
     access_token: str
-    refresh_token: str | None = None
+    refresh_token: Union[str, None] = None
     token_type: str
     access_lvl: int
 
@@ -65,6 +65,7 @@ class NewUser(BaseModel):
 class User(BaseModel):
     username: str
     password: str
+    private_key : str
     company: str
     country: str
     address: _Address
@@ -107,13 +108,13 @@ class Product(BaseModel):
 
 
 class ProductCheckin(BaseModel):
-    transaction_date: str | datetime
-    shipment_date: str | datetime
+    transaction_date: Union[str, datetime]
+    shipment_date: Union[str, datetime]
 
 
 class ProductCheckout(BaseModel):
     future_owner: str
-    transaction_date: str | datetime
+    transaction_date: Union[str, datetime]
     shipment: _ShipmentModel
 
 
@@ -155,7 +156,8 @@ class AccessLevels(Enum):
     dispenser = 1,
     manufacturer = 2,
     authority = 3,
-    admin = 4
+    admin = 4,
+    root = 4
 
 
 # Group Types that are associated to times/dates have index numbers < 10
